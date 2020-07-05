@@ -1,0 +1,38 @@
+laravel new taskmanager
+composer require laravelcollective/html
+
+cd taskmanager
+
+composer require laravel/ui
+php artisan ui bootstrap
+php artisan ui bootstrap --auth
+
+
+
+
+
+npm install
+
+npm remove bootstrap popper.js
+npm i bootstrap @popperjs/core --save-dev
+#needed for run dev to work
+npm install popper.js --save
+npm install moment-timezone
+npm run dev
+
+
+php artisan make:model Task -mcr
+
+
+php artisan make:command SendReminders
+
+php artisan make:seeder StatusSeeder
+php artisan make:seeder PrioritySeeder
+
+php artisan migrate
+php artisan db:seed
+
+for datetime picker:
+
+npm i moment
+
