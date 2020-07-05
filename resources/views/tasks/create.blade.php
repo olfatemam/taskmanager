@@ -43,11 +43,11 @@
     
 <div class="form-group">
         {{ Form::label('priority_id', 'Priority', array('class'=>'')) }}
-        {{ Form::select('priority_id', $priorities, -1, array('required', 'id'=>'priority_id', 'class' => 'form-control') ) }}        
+        {{ Form::select('priority_id', $priorities, -1, array('required', 'id'=>'priority_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
 </div>
 <div class="form-group">
         {{ Form::label('status_id', 'Status', array('class'=>'')) }}
-        {{ Form::select('status_id', $statuses, -1, array('required','id'=>'status_id', 'class' => 'form-control') ) }}        
+        {{ Form::select('status_id', $statuses, -1, array('required','id'=>'status_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
 </div>
 
 <div class="form-group">
@@ -59,8 +59,12 @@
         {{ Form::label('description', 'Description') }}
         {{ Form::text('description', null, array('class' => 'form-control')) }}
 </div>
-
-
+    
+<div class="form-group row">
+    <div class="col-md-1" style='padding: 0;margin:0'>{{ Form::checkbox('reminder', 1, true, array('class' => 'form-control', 'style'=>'margin-right:0')) }}</div>        
+    <div class="col-md-2" >{{ Form::label('reminder', 'Send Reminder', array('style'=>'')) }}</div>        
+</div>
+    <hr>
     {{ Form::submit('Create Task', array('class' => 'btn btn-primary')) }}
     
 
@@ -98,6 +102,7 @@ $(document).ready(function(){
 
  var tz = moment.tz.guess();
  $("#tzone").val(tz);
+ 
 $("form").submit(function(){
 });
 

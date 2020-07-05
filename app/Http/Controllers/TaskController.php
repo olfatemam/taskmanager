@@ -120,7 +120,7 @@ class TaskController extends Controller
             
             $task->save();
 
-            return redirect()->route('tasks.manage', 
+            return redirect()->route('tasks.search', 
                 $task->id)->with('flash_message', 'Task, '. $task->name.' updated');
         }
         
@@ -134,7 +134,7 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
-        return redirect()->route('tasks.manage')
+        return redirect()->route('tasks.search')
             ->with('flash_message', 'Task deleted!');
     }
 }
