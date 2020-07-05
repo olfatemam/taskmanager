@@ -3,8 +3,6 @@
 
 {{ Form::open(array('route' => 'tasks.store', 'method' => 'post')) }}
 
-
-
 <div class="container">
 
     

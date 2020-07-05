@@ -7,79 +7,81 @@ use Illuminate\Http\Request;
 
 class StatusController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function search()
+    {
+        $statuses = Status::get();
+        return view('statuses.search', compact('statuses'));
+    }
     public function index()
     {
-        //
+        return $this->search();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        //
+        return view('statuses.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
-        //
+        $request->validate([
+                    'name'=>'required|max:100',
+        ]);
+        try
+        {
+            $status = Status::create(
+                    [
+                        'name'=>$request['name'], 
+                        'reminder'=>$request['reminder']
+                        ]);
+            return redirect()->route('statuses.search');//->with('flash_message', 'Task '. $status->name.' created');
+        }
+        catch (\PDOException $e)
+        {
+            return \App\Helpers\DBError::report($e);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Status  $status
-     * @return \Illuminate\Http\Response
-     */
     public function show(Status $status)
     {
-        //
+        return view ('statuses.show', compact('status'));
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Status  $status
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Status $status)
     {
-        //
+        return view('statuses.edit', compact('task'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Status  $status
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Status $status)
     {
-        //
+        $this->validate($request, [
+            'name'=>'required|max:200',
+        ]);
+
+        try
+        {
+            $status->name=$request['name'];
+            
+            $status->save();
+
+            return redirect()->route('statuses.search', $status->id)->with('flash_message', 'Status, '. $status->name.' updated');
+        }
+        
+        catch (\PDOException $e)
+        {
+            return \App\Helpers\DBError::report($e);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Status  $status
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Status $status)
     {
-        //
+        $status->delete();
+        return redirect()->route('statuses.search')->with('flash_message', 'Status deleted!');
     }
 }

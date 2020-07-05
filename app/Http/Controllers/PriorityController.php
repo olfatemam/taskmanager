@@ -7,79 +7,77 @@ use Illuminate\Http\Request;
 
 class PriorityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function search()
+    {
+        $priorities = Priority::get();
+        return view('priorities.search', compact('priorities'));
+    }
     public function index()
     {
-        //
+        return $this->search();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        //
+        return view('priorities.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
-        //
+        $request->validate([
+                    'name'=>'required|max:100',
+        ]);
+        try
+        {
+            $priority = Priority::create(['name'=>$request['name']]);
+            return redirect()->route('priorities.search');//->with('flash_message', 'Task '. $priority->name.' created');
+        }
+        catch (\PDOException $e)
+        {
+            return \App\Helpers\DBError::report($e);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Priority  $priority
-     * @return \Illuminate\Http\Response
-     */
     public function show(Priority $priority)
     {
-        //
+        return view ('priorities.show', compact('priority'));
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Priority  $priority
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Priority $priority)
     {
-        //
+        return view('priorities.edit', compact('task'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Priority  $priority
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Priority $priority)
     {
-        //
+        $this->validate($request, [
+            'name'=>'required|max:200',
+        ]);
+
+        try
+        {
+            $priority->name=$request['name'];
+            
+            $priority->save();
+
+            return redirect()->route('priorities.search', $priority->id)->with('flash_message', 'Priority, '. $priority->name.' updated');
+        }
+        
+        catch (\PDOException $e)
+        {
+            return \App\Helpers\DBError::report($e);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Priority  $priority
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Priority $priority)
     {
-        //
+        $priority->delete();
+        return redirect()->route('priorities.search')->with('flash_message', 'Priority deleted!');
     }
 }

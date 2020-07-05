@@ -20,12 +20,20 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::resource('tasks', 'TaskController');
+Route::resource('priorities', 'PriorityController');
+Route::resource('statuses', 'StatusController');
 
 Route::resource('users', 'UserController');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::any('tasks.list', 'TaskController@list')->name('tasks.list');
+
 Route::any('tasks.search', 'TaskController@search')->name('tasks.search');
+
+Route::any('priorities.search', 'PriorityController@search')->name('priorities.search');
+Route::any('statuses.search', 'StatusController@search')->name('statuses.search');
+
+
 Route::post('users', 'UserController@search')->name('users');
     

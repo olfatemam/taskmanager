@@ -73,7 +73,7 @@
                     <td>{{ ($task->reminder)?'YES':'NO' }}</td>
                     <td>{{ $task->description }}</td>
                     <td>
-                    <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-edit pull-left" style="margin-right: 3px;">Edit</a>
+                    <a href="{{ route('tasks.edit', $task) }}" class="btn btn-edit pull-left" style="margin-right: 3px;">Edit</a>
                     {!! Form::open(['method' => 'DELETE', 'route' => ['tasks.destroy', $task] ]) !!}
                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
                     {!! Form::close() !!}
