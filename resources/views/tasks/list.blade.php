@@ -13,10 +13,15 @@
 <div class='clearfix'></div>
 <div class="panel-body" >
 <div class="row" >
+    
+    @if(Auth::user()->is_admin())    
     <div class="col-md-3">
         {{ Form::label('user_id', 'User', array('class'=>'')) }}
-        {{ Form::select('user_id', $users, -1, array('id'=>'user_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
+        {{ Form::select('user_id', $users, -1, array('class' => 'form-control', 'placeholder'=>'') ) }}        
     </div>
+    @else
+        {{ Form::hidden('user_id', Auth::user()->id) }}        
+    @endif
     <div class="col-md-3">
         {{ Form::label('priority_id', 'Priority', array('class'=>'')) }}
         {{ Form::select('priority_id', $priorities, -1, array('id'=>'priority_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
