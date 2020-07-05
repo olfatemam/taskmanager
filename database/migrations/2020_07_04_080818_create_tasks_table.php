@@ -19,6 +19,7 @@ class CreateTasksTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->string('name');
             $table->dateTime('due');
+            $table->integer('remind_before')->default(2);
             $table->foreignId('priority_id');
             $table->foreignId('status_id');
             $table->string('description')->nullable();

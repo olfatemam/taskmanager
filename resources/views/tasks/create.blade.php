@@ -13,7 +13,15 @@
 </div>
 
 <div class="panel-body " style="margin-top: 20px">
-
+<div class="row" style="width:100%">        
+<div class="col-md-12" >    
+    
+<div class="form-group">
+        {{ Form::label('name', 'Name') }}
+        {{ Form::text('name', null, array('required', 'class' => 'form-control')) }}
+</div>
+</div>
+</div>
 
 <div class="row" style="width:100%">    
     
@@ -36,6 +44,7 @@
     </div>
 </div>
 </div>
+    
 <div class="row" style="width:100%">        
 <div class="col-md-12" >    
     
@@ -43,15 +52,7 @@
         {{ Form::label('priority_id', 'Priority', array('class'=>'')) }}
         {{ Form::select('priority_id', $priorities, -1, array('required', 'id'=>'priority_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
 </div>
-<div class="form-group">
-        {{ Form::label('status_id', 'Status', array('class'=>'')) }}
-        {{ Form::select('status_id', $statuses, -1, array('required','id'=>'status_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
-</div>
 
-<div class="form-group">
-        {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', null, array('required', 'class' => 'form-control')) }}
-</div>
 
 <div class="form-group">
         {{ Form::label('description', 'Description') }}

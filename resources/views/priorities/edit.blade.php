@@ -15,14 +15,29 @@
 <div class="panel-body " style="margin-top: 20px">
 
 <div class="row" style="width:100%">    
+<div class="col-md-12" >    
 
 <div class="form-group">
 {{ Form::label('name', 'Name') }}
-{{ Form::text('name', $priority->name, array('class' => 'form-control')) }}
+{{ Form::text('name', $priority->name, array('required', 'class' => 'form-control')) }}
+</div>
+<div class="form-group">
+{{ Form::label('number', 'Rank') }}
+{{ Form::number('number', $priority->number, array('required', 'min'=>1,'max'=>10, 'class' => 'form-control')) }}
+</div>
+<div class="form-group">
+{{ Form::label('background_color', 'Background Color') }}
+{{ Form::color('background_color', $priority->background_color, array('class' => 'form-control', 'required')) }}
+</div>
+    
+<div class="form-group">
+{{ Form::label('text_color', 'Text Color') }}
+{{ Form::color('text_color', $priority->text_color, array('class' => 'form-control', 'required')) }}
 </div>
 
 {{ Form::submit('Update Priority', array('class' => 'btn btn-primary')) }}
 
+</div>
 </div>
 </div>
 </div>

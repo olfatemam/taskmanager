@@ -65,7 +65,7 @@
 
             <tbody>
                 @foreach ($tasks as $task)
-                <tr class="{{$task->get_task_class()}}" style="{{$task->get_task_style()}}">
+                <tr style="background:{{$task->priority->background_color}}; color: {{$task->priority->text_color}}" >
                     <td><a href="{{route('tasks.show', $task->id) }}">{{$task->id}}</a></td>
                     <td>{{ $task->name }}</td>
                     <td>{{ $task->due . ' '. $task->timezone }}</td>

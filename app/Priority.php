@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Priority extends Model
 {
     protected $fillable = [
-        'name'
+        'name', 'background_color', 'text_color'
     ];
     
     public function tasks()

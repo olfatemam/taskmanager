@@ -14,14 +14,31 @@
 <div class="panel-body " style="margin-top: 20px">
 
 <div class="row" style="width:100%">    
+<div class="md-col-12" >    
 
 <div class="form-group">
 {{ Form::label('name', 'Name') }}
 {{ Form::text('name', null, array('class' => 'form-control')) }}
 </div>
+    
+<div class="form-group">
+{{ Form::label('number', 'Number') }}
+{{ Form::number('number', null, array('class' => 'form-control', 'required', 'min'=>1,'max'=>10 )) }}
+</div>
+    
+<div class="form-group">
+{{ Form::label('background_color', 'Background Color') }}
+{{ Form::color('background_color', null, array('class' => 'form-control', 'required')) }}
+</div>
 
-    {{ Form::submit('Create Priority', array('class' => 'btn btn-primary')) }}
+<div class="form-group">
+{{ Form::label('text_color', 'Text Color') }}
+{{ Form::color('text_color', null, array('class' => 'form-control', 'required')) }}
+</div>
 
+{{ Form::submit('Create Priority', array('class' => 'btn btn-primary')) }}
+
+</div>
 </div>
 </div>
 </div>

@@ -67,10 +67,10 @@ class TaskController extends Controller
     public function create()
     {
         
-        $statuses=Status::pluck('name', 'id');
+        //$statuses=Status::pluck('name', 'id');
         $priorities= Priority::pluck('name', 'id');
         
-        return view('tasks.create', compact('statuses','priorities'));
+        return view('tasks.create', compact('priorities'));
     }
 
     public function store(Request $request)
@@ -79,13 +79,21 @@ class TaskController extends Controller
                     'name'=>'required|max:100',
                     //'description'=>'required|max:100',
                     'priority_id'=>'required',
-                    'status_id'=>'required',
                     'due'=>'required',
         ]);
         try
         {
             $task = new \App\Task();
-            
+            $statuses = Status::where('name','New')->get();
+            if(!$statuses->count())
+            {
+                $status=Status::create(['name'=>'New', 'reminder'=>true]);
+                $request['status_id']=$status->id;
+            }
+            else
+            {
+                $request['status_id']=$statuses->first()->id;
+            }
             $task->read_input($request);
             
             $task->save();

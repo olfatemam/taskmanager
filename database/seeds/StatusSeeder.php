@@ -13,10 +13,8 @@ class StatusSeeder extends Seeder
     {
         $seeds=[
             ['name'=>'New'], 
-            ['name'=>'Paused'], 
-            ['name'=>'Delayed'],
-            ['name'=>'Finished', 'remind'=>false], 
-            ['name'=>'Canceled',  'remind'=>false]];
+            ['name'=>'Finished', 'reminder'=>false], 
+            ['name'=>'Canceled',  'reminder'=>false]];
         foreach($seeds as $seed)
         {
             \App\Status::create($seed);

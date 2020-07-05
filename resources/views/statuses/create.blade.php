@@ -15,6 +15,7 @@
 <div class="panel-body " style="margin-top: 20px">
 
 <div class="row" style="width:100%">    
+<div class="col-md-12">    
 
 <div class="form-group">
 {{ Form::label('name', 'Name') }}
@@ -27,6 +28,7 @@
 
     {{ Form::submit('Create Status', array('class' => 'btn btn-primary')) }}
 
+</div>
 </div>
 </div>
 </div>

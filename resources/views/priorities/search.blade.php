@@ -14,6 +14,8 @@
         <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Rank</th>
+                    <th>Color</th>
                     <th>Operations</th>
                 </tr>
             </thead>
@@ -21,6 +23,8 @@
                 @foreach ($priorities as $priority)
                 <tr>
                     <td>{{ $priority->name }}</td>
+                    <td>{{ $priority->number }}</td>
+                    <td style="background:{{$priority->background_color}}; color: {{$priority->text_color}}">{{ 'sample' }}</td>
                     <td>
                     <a href="{{ route('priorities.edit', $priority) }}" class="btn btn-primary  btn-edit pull-left" style="margin-right: 3px;">Edit</a>
                     {!! Form::open(['method' => 'DELETE', 'route' => ['priorities.destroy', $priority] ]) !!}
