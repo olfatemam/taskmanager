@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect()->route('users.calendar');
+    return redirect()->route('tasks.calendar');
     
 });
 
@@ -39,7 +39,6 @@ Route::any('statuses.search', 'StatusController@search')->name('statuses.search'
 
 Route::post('users', 'UserController@search')->name('users');
 
-Route::get('users.calendar', 'UserController@calendar')->name('users.calendar');
-
+Route::get('tasks.calendar', 'TaskController@calendar')->name('tasks.calendar');
 
 });    

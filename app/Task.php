@@ -67,7 +67,7 @@ class Task extends Model
                 
         if(Auth::user()->is_admin()==false)
         {
-            $query = ' where user_id = '. Auth::user()->id .' ';
+            $query = $query. ' where tasks.user_id = '. Auth::user()->id .' ';
         }
         $tasks=DB::select($query);
         

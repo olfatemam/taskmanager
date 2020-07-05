@@ -43,12 +43,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function calendar()
-    {
-        
-        $tasks= \App\Task::get_calendar_user_tasks();
-        return view('users.calendar', compact('tasks'));
-    }
+    
     public function create()
     {
         return view('users.create');

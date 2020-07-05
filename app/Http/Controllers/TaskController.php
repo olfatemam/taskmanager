@@ -46,7 +46,7 @@ class TaskController extends Controller
         
         if($request['priority_id'])
         {
-            $tasks=$tasks->where('priority_id',$request['status_id']);
+            $tasks=$tasks->where('priority_id',$request['priority_id']);
         }
         
         $tasks=$tasks->paginate(10); //show only 5 items at a time in descending order
@@ -146,4 +146,11 @@ class TaskController extends Controller
         return redirect()->route('tasks.search')
             ->with('flash_message', 'Task deleted!');
     }
+    
+    public function calendar()
+    {
+        $tasks= \App\Task::get_calendar_user_tasks();
+        return view('users.calendar', compact('tasks'));
+    }
+    
 }
