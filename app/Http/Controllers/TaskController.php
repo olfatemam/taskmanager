@@ -91,9 +91,6 @@ class TaskController extends Controller
         {
             $task = new \App\Task();
             
-            $status=Status::getNew();
-            $request['status_id']=$status->id;
-            $request['completed']=false;
             
             $task->read_input($request);
             

@@ -37,9 +37,20 @@ class Task extends Model
         $this->due          =   $date->format('Y-m-d H:i:s');
         
         $this->priority_id  =   $request['priority_id'];
-        $this->status_id    =   $request['status_id'];
+        //$this->status_id    =   $request['status_id'];
         $this->reminder     =   ($request['reminder']==null)?false:$request['reminder'];
+        $this->completed     =   ($request['completed']==null)?false:$request['completed'];
         $this->timezone     =   $request['timezone'];
+        
+        
+        if(!$this->status_id)
+        {
+            $status=Status::getNew();
+            $this->status_id=$status->id;
+        }
+        if($this->completed==true)
+            $this->reminder=false;
+        
     }
           
     public function send_reminder_email()
