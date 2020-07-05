@@ -20,7 +20,7 @@
 <table class='table table-striped'>
 <tr>Id<td></td><td><a href="{{route('tasks.show', $task->id) }}">{{$task->id}}</a></td>
 </tr><tr><td>Name</td><td>{{ $task->name }}</td>
-</tr><tr><td>Due</td><td>{{ $task->due . ' '. $task->tzone }}</td>
+</tr><tr><td>Due</td><td>{{ $task->due . ' '. $task->timezone }}</td>
 </tr><tr><td>Status</td><td>{{ $task->status->name }}</td>
 </tr><tr><td>Priority</td><td>{{ $task->priority->name }}</td>
 </tr><tr><td>Reminder</td><td>{{ ($task->reminder)?'YES':'NO' }}</td>

@@ -5,6 +5,7 @@ use Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class Task extends Model
 {
@@ -38,7 +39,7 @@ class Task extends Model
         $this->priority_id  =   $request['priority_id'];
         $this->status_id    =   $request['status_id'];
         $this->reminder     =   ($request['reminder']==null)?false:$request['reminder'];
-        $this->timezone     =   $request['tzone'];
+        $this->timezone     =   $request['timezone'];
     }
           
     public function send_reminder_email()
@@ -54,4 +55,24 @@ class Task extends Model
     {
         return ($this->status->remind)?"": "text-decoration: line-through;";
     }
+    
+    public static function get_calendar_user_tasks()
+    {
+        $query = 'select tasks.id as id, tasks.name as title, '
+                . ' tasks.due as start, tasks.timezone as timezone, '
+                . ' statuses.name as status, '
+                . ' priorities.name as priority from tasks '
+                . ' inner join statuses on tasks.status_id=statuses.id '
+                . ' inner join priorities on tasks.priority_id=priorities.id ';
+                
+        if(Auth::user()->is_admin()==false)
+        {
+            $query = ' where user_id = '. Auth::user()->id .' ';
+        }
+        $tasks=DB::select($query);
+        
+        return $tasks; 
+    }
+    
+    
 }

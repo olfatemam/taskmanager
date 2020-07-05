@@ -22,7 +22,7 @@
                 <tr>
                     <td>{{ $priority->name }}</td>
                     <td>
-                    <a href="{{ route('priorities.edit', $priority) }}" class="btn btn-edit pull-left" style="margin-right: 3px;">Edit</a>
+                    <a href="{{ route('priorities.edit', $priority) }}" class="btn btn-primary  btn-edit pull-left" style="margin-right: 3px;">Edit</a>
                     {!! Form::open(['method' => 'DELETE', 'route' => ['priorities.destroy', $priority] ]) !!}
                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
                     {!! Form::close() !!}

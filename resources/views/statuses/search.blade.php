@@ -25,7 +25,7 @@
                     <td>{{ $status->name }}</td>
                     <td>{{ ($status->reminder)?"YES":"NO" }}</td>
                     <td>
-                    <a href="{{ route('statuses.edit', $status) }}" class="btn btn-edit pull-left" style="margin-right: 3px;">Edit</a>
+                    <a href="{{ route('statuses.edit', $status) }}" class="btn btn-edit btn-primary pull-left" style="margin-right: 3px;">Edit</a>
                     {!! Form::open(['method' => 'DELETE', 'route' => ['statuses.destroy', $status] ]) !!}
                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
                     {!! Form::close() !!}

@@ -68,7 +68,7 @@
                 <tr class="{{$task->get_task_class()}}" style="{{$task->get_task_style()}}">
                     <td><a href="{{route('tasks.show', $task->id) }}">{{$task->id}}</a></td>
                     <td>{{ $task->name }}</td>
-                    <td>{{ $task->due . ' '. $task->tzone }}</td>
+                    <td>{{ $task->due . ' '. $task->timezone }}</td>
                     <td>{{ $task->status->name }}</td>
                     <td>{{ $task->priority->name }}</td>
                     <td>{{ ($task->reminder)?'YES':'NO' }}</td>

@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('users.calendar');
+    
 });
 
 Auth::routes();
@@ -25,6 +26,7 @@ Route::resource('statuses', 'StatusController');
 
 Route::resource('users', 'UserController');
 
+Route::group(['middleware' => ['auth']], function(){
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::any('tasks.list', 'TaskController@list')->name('tasks.list');
@@ -36,4 +38,8 @@ Route::any('statuses.search', 'StatusController@search')->name('statuses.search'
 
 
 Route::post('users', 'UserController@search')->name('users');
-    
+
+Route::get('users.calendar', 'UserController@calendar')->name('users.calendar');
+
+
+});    

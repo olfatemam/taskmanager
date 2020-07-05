@@ -31,8 +31,8 @@
 </div>
 <div class="col-md-6" >
     <div class="form-group">
-        {{ Form::label('tzone', 'Time Zone', array('class'=>'')) }}
-        {{ Form::text('tzone', 'UTC', array('readonly', 'class' => 'form-control')) }}
+        {{ Form::label('timezone', 'Time Zone', array('class'=>'')) }}
+        {{ Form::text('timezone', 'UTC', array('readonly', 'class' => 'form-control')) }}
     </div>
 </div>
 </div>
@@ -78,16 +78,13 @@
 
 
 @section('content_styles')
-
+<link href="{{ asset('libs/datetimepicker/css/tempusdominus-bootstrap-4.min.css') }}" rel='stylesheet' />
 @endsection
 
-
 @section('content_scripts')
-
-<script type="text/javascript" src="{{asset('js/moment/moment.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/moment/moment-timezone-with-data.js')}}"></script>
-
-<script type="text/javascript" src="{{asset('js/tempusdominus-bootstrap-4.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('libs/moment/moment.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('libs/moment/moment-timezone-with-data.js')}}"></script>
+<script type="text/javascript" src="{{asset('libs/datetimepicker/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 
 
 <script>
@@ -99,7 +96,7 @@ $(document).ready(function(){
 });
 
  var tz = moment.tz.guess();
- $("#tzone").val(tz);
+ $("#timezone").val(tz);
  
 $("form").submit(function(){
 });
