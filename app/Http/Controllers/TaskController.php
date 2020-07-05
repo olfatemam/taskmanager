@@ -40,11 +40,11 @@ class TaskController extends Controller
             $tasks=$tasks->where('user_id',Auth::user()->id);
         }
         
-        if($request['status_id'])
-        {
-            $tasks=$tasks->where('status_id',$request['status_id']);
-        }
-        
+//        if($request['status_id'])
+//        {
+//            $tasks=$tasks->where('status_id',$request['status_id']);
+//        }
+//        
         if($ignore_completed==true)
         {
             $tasks=$tasks->where('completed',false);
@@ -56,7 +56,7 @@ class TaskController extends Controller
         }
         
         $tasks=$tasks->paginate(10); //show only 5 items at a time in descending order
-        $statuses=Status::pluck('name', 'id');
+        //$statuses=Status::pluck('name', 'id');
         $priorities= Priority::pluck('name', 'id');
         if(Auth::user()->is_admin())
         {
@@ -67,7 +67,7 @@ class TaskController extends Controller
             $users= collect([Auth::user()]);
             $users=$users->pluck('name', 'id');
         }
-        return view($view, compact('route', 'tasks', 'users','statuses','priorities'));
+        return view($view, compact('route', 'tasks', 'users','priorities'));
     }
 
     public function create()
@@ -139,7 +139,7 @@ class TaskController extends Controller
         $this->validate($request, [
             'name'=>'required|max:200',
             'priority_id'=>'required',
-            'status_id'=>'required',
+            //'status_id'=>'required',
             'due'=>'required',
         ]);
 

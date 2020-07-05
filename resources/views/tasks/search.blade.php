@@ -48,10 +48,8 @@
         <table class="table table-bordered table-striped">
         <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Due</th>
-                    
                     <th>Priority</th>
                     <th>Completed</th>
                     <th>Reminder</th>
@@ -63,9 +61,9 @@
             <tbody>
                 @foreach ($tasks as $task)
                 <tr>
-                    <td><a href="{{route('tasks.show', $task->id) }}">{{$task->id}}</a></td>
-                    <td>{{ $task->name }}</td>
-                    <td>{{ $task->due . ' '. $task->timezone }}</td>
+                    <td><a href="{{route('tasks.show', $task->id) }}">{{$task->name}}</a></td>
+                    
+                    <td>{{ $task->hagar_due() }}</td>
                     <td>{{ $task->priority->name }}</td>
                     <td>{{ ($task->completed)?'YES':'NO' }}</td>
                     <td>{{ ($task->reminder)?'YES':'NO' }}</td>

@@ -73,6 +73,16 @@ class Task extends Model
         
         return $tasks; 
     }
+    public function overdue()
+    {
+        
+        $tzone  = new \DateTimeZone($this->timezone);
+        $now = new \DateTime("now", $tzone);
+        $due = new \DateTime($this->due, $tzone);
+        
+        return ($due<$now);
+    }
+
     public function hagar_due()
     {
         $date = new \DateTime($this->due);

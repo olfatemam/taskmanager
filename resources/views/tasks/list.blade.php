@@ -26,10 +26,7 @@
         {{ Form::label('priority_id', 'Priority', array('class'=>'')) }}
         {{ Form::select('priority_id', $priorities, -1, array('id'=>'priority_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
     </div>
-    <div class="col-md-3">
-        {{ Form::label('status_id', 'Status', array('class'=>'')) }}
-        {{ Form::select('status_id', $statuses, -1, array('id'=>'status_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
-    </div>
+    
     <div class="col-md-3 col-md-offset-1" >
     {{ Form::submit('Search', array('class' => 'btn btn-primary', 'style'=>'width:100%;height:50px;margin-top:20px', 'id'=>'btn_search_packages')) }}
     {{ Form::close() }}
@@ -55,7 +52,7 @@
                     <th>Complete</th>
                     <th>Name</th>
                     <th>Due</th>
-                    
+                    <th>Overdue</th>
                     <th>Priority</th>
                     <th>Reminder</th>
                     <th>Description</th>
@@ -66,9 +63,10 @@
             <tbody>
                 @foreach ($tasks as $task)
                 <tr style="background:{{$task->priority->background_color}}; color: {{$task->priority->text_color}}" >
-                    <td><a style="color: white;background:blue" href="{{route('tasks.complete', $task->id) }}"><i class="fa fa-check" aria-hidden="true"></i></a></td>
+                    <td><a style="color: white" class="table-primary" href="{{route('tasks.complete', $task->id) }}"><i class="fa fa-check" aria-hidden="true"></i></a></td>
                     <td><a style="color: white;" href="{{route('tasks.show', $task->id) }}">{{$task->name}}</a></td>
                     <td>{{ $task->hagar_due() . ' ' }}</td>
+                    <td>{{ $task->overdue()? 'YES':'FALSE' }}</td>
                     <td>{{ $task->priority->name }}</td>
                     <td>{{ ($task->reminder)?'YES':'NO' }}</td>
                     <td>{{ $task->description }}</td>
