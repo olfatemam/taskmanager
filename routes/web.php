@@ -41,4 +41,7 @@ Route::post('users', 'UserController@search')->name('users');
 
 Route::get('tasks.calendar', 'TaskController@calendar')->name('tasks.calendar');
 
+
+Route::get('tasks.complete/{id}', 'TaskController@complete')->name('tasks.complete');
+
 });    

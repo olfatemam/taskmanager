@@ -25,10 +25,7 @@
         {{ Form::label('priority_id', 'Priority', array('class'=>'')) }}
         {{ Form::select('priority_id', $priorities, -1, array('id'=>'priority_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
     </div>
-    <div class="col-md-3">
-        {{ Form::label('status_id', 'Status', array('class'=>'')) }}
-        {{ Form::select('status_id', $statuses, -1, array('id'=>'status_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
-    </div>
+
     <div class="col-md-3 col-md-offset-1" >
     {{ Form::submit('Search', array('class' => 'btn btn-primary', 'style'=>'width:100%;height:50px;margin-top:20px', 'id'=>'btn_search_packages')) }}
     {{ Form::close() }}
@@ -54,8 +51,9 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Due</th>
-                    <th>Status</th>
+                    
                     <th>Priority</th>
+                    <th>Completed</th>
                     <th>Reminder</th>
                     <th>Description</th>
                     <th>Operations</th>
@@ -68,8 +66,8 @@
                     <td><a href="{{route('tasks.show', $task->id) }}">{{$task->id}}</a></td>
                     <td>{{ $task->name }}</td>
                     <td>{{ $task->due . ' '. $task->timezone }}</td>
-                    <td>{{ $task->status->name }}</td>
                     <td>{{ $task->priority->name }}</td>
+                    <td>{{ ($task->completed)?'YES':'NO' }}</td>
                     <td>{{ ($task->reminder)?'YES':'NO' }}</td>
                     <td>{{ $task->description }}</td>
                     <td>

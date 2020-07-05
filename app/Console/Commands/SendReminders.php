@@ -50,6 +50,8 @@ class SendReminders extends Command
         
         $query = $query->where('reminder_sent',  false);
         
+        $query = $query->where('completed',  false);
+        
         $query = $query->where('statuses.reminder', true);
         
         $tasks = $query->get();

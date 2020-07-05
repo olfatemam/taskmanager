@@ -22,14 +22,15 @@ class TaskController extends Controller
 
     public function list(Request $request)
     {
-        return $this->search_generic($request, 'tasks.list', 'tasks.list');
+        
+        return $this->search_generic($request, 'tasks.list', 'tasks.list', true);
     }
     public function search(Request $request)
     {
-        return $this->search_generic($request, 'tasks.search', 'tasks.search');
+        return $this->search_generic($request, 'tasks.search', 'tasks.search', false);
     }
     
-    public function search_generic(Request $request, $view, $route)
+    public function search_generic(Request $request, $view, $route, $ignore_completed)
     {
         
         $tasks = Task::orderby('due', 'asc');
@@ -42,6 +43,11 @@ class TaskController extends Controller
         if($request['status_id'])
         {
             $tasks=$tasks->where('status_id',$request['status_id']);
+        }
+        
+        if($ignore_completed==true)
+        {
+            $tasks=$tasks->where('completed',false);
         }
         
         if($request['priority_id'])
@@ -84,16 +90,11 @@ class TaskController extends Controller
         try
         {
             $task = new \App\Task();
-            $statuses = Status::where('name','New')->get();
-            if(!$statuses->count())
-            {
-                $status=Status::create(['name'=>'New', 'reminder'=>true]);
-                $request['status_id']=$status->id;
-            }
-            else
-            {
-                $request['status_id']=$statuses->first()->id;
-            }
+            
+            $status=Status::getNew();
+            $request['status_id']=$status->id;
+            $request['completed']=false;
+            
             $task->read_input($request);
             
             $task->save();
@@ -119,6 +120,17 @@ class TaskController extends Controller
         $statuses=Status::pluck('name', 'id');
         $priorities= Priority::pluck('name', 'id');
         return view('tasks.edit', compact('task', 'statuses', 'priorities'));
+    }
+
+    public function complete($id)
+    {
+        $task = Task::findOrFail($id);
+        $task->completed = true;
+        //$task->completion_time=now();//olfat: add completion time
+        $task->save(); 
+        
+        return redirect()->route('tasks.list', $task->id)->with('flash_message', 'Task, '. $task->name.' completed.');
+        
     }
 
     

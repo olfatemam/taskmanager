@@ -26,14 +26,14 @@ class Task extends Model
     
     public function read_input($request)
     {
-        $this->name         =   $request['name'];
+        $this->name             =   $request['name'];
+        $this->completed        =   $request['completed'];
+        
         $this->user_id      =   Auth::user()->id;//$request['name'];
         $this->description  =   $request['description'];
         
         
         $date =  new \DateTime($request['due']); 
-        Log::info("due:=". $request['due']);
-        //Log::info("date:=", $date);
         $this->due          =   $date->format('Y-m-d H:i:s');
         
         $this->priority_id  =   $request['priority_id'];
@@ -72,6 +72,11 @@ class Task extends Model
         $tasks=DB::select($query);
         
         return $tasks; 
+    }
+    public function hagar_due()
+    {
+        $date = new \DateTime($this->due);
+        return $date->format("D j, M y   h:i A");
     }
     
     

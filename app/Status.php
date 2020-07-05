@@ -13,4 +13,14 @@ class Status extends Model
     {
         return $this->hasMany('App\Task');
     }
+    
+    public static function getNew()
+    {
+        $statuses = Status::where('name','New')->get();
+        if(!$statuses->count())
+        {
+            return Status::create(['name'=>'New', 'reminder'=>true]);
+        }
+        return $statuses->first();
+    }
 }

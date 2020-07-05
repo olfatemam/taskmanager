@@ -22,6 +22,7 @@ class CreateTasksTable extends Migration
             $table->integer('remind_before')->default(2);
             $table->foreignId('priority_id');
             $table->foreignId('status_id');
+            $table->boolean('completed')->default(false);
             $table->string('description')->nullable();
             
             $table->string('timezone');

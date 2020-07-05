@@ -44,10 +44,10 @@
         {{ Form::label('priority_id', 'Priority', array('class'=>'')) }}
         {{ Form::select('priority_id', $priorities, $task->priority_id, array('required', 'id'=>'priority_id', 'class' => 'form-control') ) }}        
 </div>
-<div class="form-group">
+<!--<div class="form-group">
         {{ Form::label('status_id', 'Status', array('class'=>'')) }}
         {{ Form::select('status_id', $statuses, $task->status_id, array('required','id'=>'status_id', 'class' => 'form-control') ) }}        
-</div>
+</div>-->
 
 <div class="form-group">
         {{ Form::label('name', 'Name') }}
@@ -63,6 +63,10 @@
 <div class="form-group row">
     <div class="col-md-1" style='padding: 0;margin:0'>{{ Form::checkbox('reminder', 1, $task->reminder, array('class' => 'form-control', 'style'=>'margin-right:0')) }}</div>        
     <div class="col-md-2" >{{ Form::label('reminder', 'Send Reminder', array('style'=>'')) }}</div>        
+</div>
+<div class="form-group row">
+    <div class="col-md-1" style='padding: 0;margin:0'>{{ Form::checkbox('completed', 1, $task->completed, array('class' => 'form-control', 'style'=>'margin-right:0')) }}</div>        
+    <div class="col-md-2" >{{ Form::label('completed', 'Completed', array('style'=>'')) }}</div>        
 </div>
     <hr>
 
