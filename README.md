@@ -17,9 +17,14 @@ run from the installation folder the command "composer install --no-dev –optim
 
 5. the first user to register will be granted Admin rights, following registrations will be with 'User' right
 6. admin can view/manage tasks for self and all other users
+7. admin can change access rights to other users and grant them admin rights or delete them from the system
 7. a user can see and manage only his own tasks
 
 
 TBD:
 add fullcalendar to view tasks in a planner like view 
 
+check todo popular websites for ideas, starting with todoist.com
+
+Add change password to the user edit options 
+revisit the logic of users removal from the system, a currently, a user may not be removed if he has created tasks by database constraints. should it be allowed and all related tasks e deleted by cascade instead?
