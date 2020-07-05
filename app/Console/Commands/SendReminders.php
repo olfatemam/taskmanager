@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
+use App\Task;
 class SendReminders extends Command
 {
     /**
@@ -11,7 +11,7 @@ class SendReminders extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'tasks:remind';
 
     /**
      * The console command description.
@@ -37,6 +37,29 @@ class SendReminders extends Command
      */
     public function handle()
     {
-        //
-    }
+        //change it so that the date is in utc
+        $nowTime = date("Y-m-d H:i:s");
+        
+        $hours_before = 2;
+        $duration = '+'. $hours_before .' hours';
+        $toTime = date('Y-m-d H:i:s', strtotime($duration,strtotime($nowTime)));
+        
+        $query = Task::join('statuses', 'statuses.id', '=','tasks.status_id' );
+                
+        $query = $query->whereBetween('due', [$nowTime, $toTime]);
+        
+        $query = $query->where('reminder_sent',  false);
+        
+        $query = $query->where('statuses.remind', true);
+        
+        $tasks = $query->get();
+        
+ 
+        foreach($tasks as $task)
+        {
+            
+            $task->send_reminder_email();
+            $event->reminder_sent=true;
+            $event->save();
+        }    }
 }

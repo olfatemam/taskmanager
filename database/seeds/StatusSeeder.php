@@ -11,7 +11,15 @@ class StatusSeeder extends Seeder
      */
     public function run()
     {
-        $seeds=[['name'=>'New'], ['name'=>'Finished'], ['name'=>'Canceled'], ['name'=>'Paused'], ['name'=>'Delayed']];
-        DB::table('statuses')->insert($seeds);
+        $seeds=[
+            ['name'=>'New'], 
+            ['name'=>'Paused'], 
+            ['name'=>'Delayed'],
+            ['name'=>'Finished', 'remind'=>false], 
+            ['name'=>'Canceled',  'remind'=>false]];
+        foreach($seeds as $seed)
+        {
+            \App\Status::create($seed);
+        }
     }
 }

@@ -12,6 +12,9 @@ class PrioritySeeder extends Seeder
     public function run()
     {
         $seeds=[['name'=>'High'], ['name'=>'Low'], ['name'=>'Normal'], ['name'=>'None']];
-        DB::table('priorities')->insert($seeds);
+        foreach($seeds as $seed)
+        {
+            \App\Priority::create($seed);
+        }
     }
 }

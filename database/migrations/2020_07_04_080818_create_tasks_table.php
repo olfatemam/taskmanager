@@ -26,6 +26,8 @@ class CreateTasksTable extends Migration
             $table->string('timezone');
             
             $table->boolean('reminder');
+            $table->boolean('reminder_sent')->default(false);
+            
             $table->timestamps();
             $table->unique( array('user_id','name') );
         });

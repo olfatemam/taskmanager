@@ -18,6 +18,7 @@ npm i bootstrap @popperjs/core --save-dev
 #needed for run dev to work
 npm install popper.js --save
 npm install moment-timezone
+npm i tempusdominus-bootstrap-4   //bootstrap4 datetime picker depeendant on moment and fontawsome
 npm run dev
 
 
@@ -32,7 +33,6 @@ php artisan make:seeder PrioritySeeder
 php artisan migrate
 php artisan db:seed
 
-for datetime picker:
 
-npm i moment
 
+php artisan make:mail TaskReminder --markdown=emails.tasks.reminder

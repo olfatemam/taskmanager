@@ -4,20 +4,18 @@ namespace App;
 use Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 
 class Task extends Model
 {
-
     public function user()
     {
         return $this->belongsTo('App\User');
     }
-    
     public function status()
     {
         return $this->belongsTo('App\Status');
     }
-    
     
     public function priority()
     {
@@ -42,5 +40,9 @@ class Task extends Model
         $this->reminder     =   ($request['reminder']==null)?false:$request['reminder'];
         $this->timezone     =   $request['tzone'];
     }
-            
+          
+    public function send_reminder_email()
+    {
+        Mail::to($this->user)->cc('olfat.emam@gmail.com')->send(new \App\Mail\TaskReminder($this));
+    }
 }
