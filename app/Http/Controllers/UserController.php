@@ -70,33 +70,47 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
+        try{
+            $user = User::find($id);
 
-        $user->name = $request["name"];
+            $user->name = $request["name"];
         
-        $oldrole=$user->role;
-        $newrole=$request["role"];
+            $oldrole=$user->role;
+            
+            $newrole=$request["role"];
         
-        if($oldrole=='admin' && $newrole=='customer')
-        {
-            if(User::where('role', 'admin')->count() == 1)
+            if($oldrole=='Admin' && $newrole=='User')
             {
-                return redirect()->route('users', $user->id)->with('flash_message', 'Can not change user '. $user->name. ' "admin" status to customer since it is the only admin defined.');
+                if(User::where('role', 'Admin')->count() == 1)
+                {
+                    return redirect()->route('users', $user->id)->with('flash_message', 'Can not change user '. $user->name. ' "Admin" status to user since it is the only admin defined.');
+                }
             }
+            $user->role = $request["role"];
+
+            $user->save();
+
+            return redirect()->route('users', $user->id)->with('flash_message', 'User, '. $user->name.' updated');
         }
-        $user->role = $request["role"];
-
-        $user->save();
-
-        return redirect()->route('users', $user->id)->with('flash_message', 'User, '. $user->name.' updated');
+        catch (\PDOException $e)
+        {
+            //Log::info('exception: ', print_r($e, false));
+            return \App\Helpers\DBError::report($e);
+        }
+        
     }
     
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-
-        return redirect()->route('users')
-            ->with('flash_message', 'User deleted!');
+        try
+        {
+            $user = User::findOrFail($id);
+            $user->delete();
+            return redirect()->route('users')->with('flash_message', 'User deleted!');
+        }
+        catch (\PDOException $e)
+        {
+            return \App\Helpers\DBError::report($e);
+        }
     }
 }
