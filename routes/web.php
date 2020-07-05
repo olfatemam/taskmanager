@@ -25,6 +25,7 @@ Route::resource('users', 'UserController');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::any('tasks.list', 'TaskController@list')->name('tasks.list');
 Route::any('tasks.search', 'TaskController@search')->name('tasks.search');
 Route::post('users', 'UserController@search')->name('users');
     

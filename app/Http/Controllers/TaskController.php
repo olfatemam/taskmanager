@@ -20,7 +20,16 @@ class TaskController extends Controller
     {
     }
 
+    public function list(Request $request)
+    {
+        return $this->search_generic($request, 'tasks.list', 'tasks.list');
+    }
     public function search(Request $request)
+    {
+        return $this->search_generic($request, 'tasks.search', 'tasks.search');
+    }
+    
+    public function search_generic(Request $request, $view, $route)
     {
         
         $tasks = Task::orderby('due', 'asc');
@@ -45,14 +54,14 @@ class TaskController extends Controller
         $priorities= Priority::pluck('name', 'id');
         if(Auth::user()->is_admin())
         {
-        $users= User::pluck('name', 'id')->where('role', 'User');
+            $users= User::pluck('name', 'id');//->where('role', 'User');
         }
         else
         {
             $users= collect([Auth::user()]);
             $users=$users->pluck('name', 'id');
         }
-        return view('tasks.search', compact('tasks', 'users','statuses','priorities'));
+        return view($view, compact('route', 'tasks', 'users','statuses','priorities'));
     }
 
     public function create()

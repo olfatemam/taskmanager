@@ -45,4 +45,13 @@ class Task extends Model
     {
         Mail::to($this->user)->cc('olfat.emam@gmail.com')->send(new \App\Mail\TaskReminder($this));
     }
+    
+    public function get_task_class()
+    {
+        return ($this->status->remind)?"table-primary": "table-dark";
+    }
+    public function get_task_style()
+    {
+        return ($this->status->remind)?"": "text-decoration: line-through;";
+    }
 }
