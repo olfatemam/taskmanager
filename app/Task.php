@@ -69,12 +69,24 @@ class Task extends Model
     
     public static function get_calendar_user_tasks()
     {
-        $query = 'select tasks.id as id, tasks.name as title, '
-                . ' tasks.due as start, tasks.timezone as timezone, '
+        $query = 'select '
+                . ' tasks.id as task_id, '
+                . ' tasks.name as title, '
+                . ' tasks.id as id, '
+                . ' tasks.due as start, '
+                . ' tasks.description as description, '
+                . ' tasks.timezone as timezone, '
                 . ' statuses.name as status, '
-                . ' priorities.name as priority from tasks '
+                . ' priorities.name as priority, '
+                . ' priorities.background_color as background_color, '
+                . ' priorities.text_color as text_color, '
+                . ' priorities.name as priority, '
+                . ' users.name as user_name, '
+                . ' users.id as user_id '
+                . ' from tasks '
                 . ' inner join statuses on tasks.status_id=statuses.id '
-                . ' inner join priorities on tasks.priority_id=priorities.id ';
+                . ' inner join priorities on tasks.priority_id=priorities.id '
+                . ' inner join users on tasks.user_id=users.id ';
                 
         if(Auth::user()->is_admin()==false)
         {

@@ -167,7 +167,7 @@ class TaskController extends Controller
     public function calendar()
     {
         $tasks= \App\Task::get_calendar_user_tasks();
-        return view('users.calendar', compact('tasks'));
+        return view('tasks.calendar', compact('tasks'));
     }
     
 }
