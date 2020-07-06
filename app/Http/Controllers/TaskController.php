@@ -20,7 +20,9 @@ class TaskController extends Controller
     
     public function tags() 
     {
+        return view('tasks.tags');
     }
+    
     public function index() 
     {
     }
