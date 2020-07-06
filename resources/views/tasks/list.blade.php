@@ -1,5 +1,18 @@
 @extends('layouts.app')
-
+@section('content_styles')
+<style>
+    <?php
+foreach(\App\Priority::get() as $priority)
+{
+    echo PHP_EOL .'.' . $priority->name .
+            '{'. 
+            'background-color: '. $priority->background_color .';'.
+            'color: '. $priority->text_color .';'.
+            '}' ;
+}
+?>
+</style>
+@endsection
 @section('content')
 
 {{ Form::model(null, array('id'=>'searchform', 'route' => array($route), 'method' => 'POST')) }}
@@ -34,50 +47,48 @@
         
 </div>
     
-
-
-<div class="row">
-<div class="col-md-12">
+<hr>
+<div class="row" style="width:100%;margin-top: 20px;">
+<ul class="list-group col-md-12" style="width:100%">
+    <li class="list-group-item ">Active Tasks</li>
+    @foreach ( $tasks as $task )
     
-<div class=''>Page {{ $tasks->currentPage() }} of {{ $tasks->lastPage() }}
-</div>
-</div>
-</div>
-<div class="row">
-<div class="col-md-12">
-<div class="table-responsive">
-        <table class="table table-bordered table-striped">
-        <thead>
-                <tr>
-                    <th>Complete</th>
-                    <th>Name</th>
-                    <th>Due</th>
-                    <th>Overdue</th>
-                    <th>Priority</th>
-                    <th>Reminder</th>
-                    <th>Description</th>
+    <li class="list-group-item {{$task->priority->name}}" style="width: 100%">
+        
+        <a title="finish" class="btn-edit btn-primary col-md-1 {{$task->priority->name}}" href="{{route('tasks.complete', $task->id) }}"><i class="fa fa-check" aria-hidden="true"></i></a>
+        <a title="edit" class="col-md-1 btn-edit btn-primary {{$task->priority->name}}" href="{{route('tasks.edit', $task->id) }}"><i class="fa fa-edit" aria-hidden="true"></i></a>
+        
+        
+        <span class="col-md-2">{{ $task->hagar_due() . ' ' }}</span>
+        
+        <a class="col-md-3 {{$task->priority->name}}" href="{{route('tasks.show', $task->id) }}">{{$task->name.': '. $task->description }}</a>
                     
-                </tr>
-            </thead>
+        @if($task->overdue()==true)
+            <span class="col-md-1 btn-warning rounded float-right">ovrdue</span>
+        @endif  
 
-            <tbody>
-                @foreach ($tasks as $task)
-                <tr style="background:{{$task->priority->background_color}}; color: {{$task->priority->text_color}}" >
-                    <td><a style="color: white" class="table-primary" href="{{route('tasks.complete', $task->id) }}"><i class="fa fa-check" aria-hidden="true"></i></a></td>
-                    <td><a style="color: white;" href="{{route('tasks.show', $task->id) }}">{{$task->name}}</a></td>
-                    <td>{{ $task->hagar_due() . ' ' }}</td>
-                    <td>{{ $task->overdue()? 'YES':'FALSE' }}</td>
-                    <td>{{ $task->priority->name }}</td>
-                    <td>{{ ($task->reminder)?'YES':'NO' }}</td>
-                    <td>{{ $task->description }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+        @if($task->reminder)
+            <span class="col-md-1 btn-info rounded float-right">reminder</span>
+        @endif
+
+        @if($task->completed)
+            <span class="col-md-1 btn-success rounded float-right">completed</span>
+        @endif
+        
+    </li>
+  
+  @endforeach
+  </ul>
+    
+
 </div>
+
+<div class="row text-center">
+    {!! $tasks->appends(Request::all())->render() !!}
 </div>
+
 </div>
+
 </div>
 </div>
 </div>
