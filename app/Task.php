@@ -71,9 +71,10 @@ class Task extends Model
     {
         $query = 'select '
                 . ' tasks.id as task_id, '
-                . ' tasks.name as title, '
+                . ' tasks.name as task_title, '
                 . ' tasks.id as id, '
                 . ' tasks.due as start, '
+                . ' tasks.due as due, '
                 . ' tasks.description as description, '
                 . ' tasks.timezone as timezone, '
                 . ' statuses.name as status, '

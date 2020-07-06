@@ -8,14 +8,23 @@
 
     
 <div class="panel panel-default">
-<div class="panel-heading"><h3>Edit New Task
+<div class="panel-heading"><h3>Edit Task
 <a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a></h3>
 <div class='clearfix'>
 </div>
 
 <div class="panel-body " style="margin-top: 20px">
 
-
+<div class="row" style="width:100%">    
+    
+<div class="col-md-12" >    
+<div class="form-group">
+        {{ Form::label('name', 'Name') }}
+        {{ Form::text('name', $task->name, array('required', 'class' => 'form-control')) }}
+</div>
+</div>
+</div>
+    
 <div class="row" style="width:100%">    
     
 <div class="col-md-6" >
@@ -49,10 +58,7 @@
         {{ Form::select('status_id', $statuses, $task->status_id, array('required','id'=>'status_id', 'class' => 'form-control') ) }}        
 </div>-->
 
-<div class="form-group">
-        {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', $task->name, array('required', 'class' => 'form-control')) }}
-</div>
+
 
 <div class="form-group">
         {{ Form::label('description', 'Description') }}
