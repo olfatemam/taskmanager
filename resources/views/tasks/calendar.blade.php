@@ -19,21 +19,42 @@
 <link href="{{ asset('libs/fullcalendar-5.1.0/lib/main.css') }}" rel='stylesheet' />
 
 <style>
+.tooltip-inner 
+{
+  padding: 0;
+  color: black;
+  text-align: center;
+  background-color: white;
+  border-radius: 0rem;
+  margin: 10px;
+  padding:10px !important;
+  font-weight: normal;
+  font-size: medium;
+  font-family: sans-serif;
+  text-align: left !important;
+} 
 
 .w3-card,.w3-card-2
 {
     background: white;
-    opacity: 1.0;
-    filter: alpha(opacity=100);
-    opacity:1!important;
+    opacity: 1;
     box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)
 }
 .w3-card-4,.w3-hover-shadow:hover{opacity:1!important;box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)}
 .w3-ul{list-style-type:none;padding:0;margin:0}.w3-ul li{padding:8px 16px;border-bottom:1px solid #ddd}.w3-ul li:last-child{border-bottom:none}
 .w3-tooltip,.w3-display-container{position:relative}.w3-tooltip .w3-text{display:none}.w3-tooltip:hover .w3-text{display:inline-block}
 .w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
-</style>
+.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
 
+
+<?php
+foreach(\App\Priority::get() as $priority)
+{
+    echo PHP_EOL .'.' . $priority->name .'{'. 'color: '. $priority->background_color .';}' ;
+}
+?>
+
+</style>
 
 @endsection
 
@@ -48,22 +69,35 @@
 
 <script>
 
-function flag(task)
+function get_staus_title(event)
 {
-    return '<i class="fa fa-flag" aria-hidden="true" title="'+task.priority +'" style="background-color: ' + task.background_color +'!important;"></i>';
+    
+    overdue="";
+    if(event.extendedProps.completed==false && moment(event.start).isBefore(moment())==true)
+    {
+        overdue='<span class="btn-warning rounded float-right">Ovrdue</span>'
+    }       
+    if(event.extendedProps.completed==true)
+    {
+         return '<span class="'+event.extendedProps.priority+'"><s>'+event.title+' </s></span>';
+    }
+    return '<span class="'+event.extendedProps.priority+'">'+event.title+overdue+'</span>';
+    
 }
-
-
-function create_tooltip(task)
+function create_tooltip(event)
 {
+     task = event.extendedProps;
     //console.log(task);
     tooltip=
-        '<div class="text-dark" style="width: 18rem;color:black !important">'+
+        '<div class="w3-tooltip" style="width:18rem" >'+
         '<ul class="w3-ul">'+
-        '<li>'+flag(task)+' '+task.task_title+'</li>'+
+        '<li><i class="fa fa-flag ' + task.priority + '" aria-hidden="true" ></i>'+' '+ 
+        get_staus_title(event) +
+        '</li>'+
         '<li>'+task.description+'</li>'+
-        '<li>'+moment(task.due).format("lll")+'</li>'+
+        '<li>'+moment(event.start).format("lll")+'</li>'+
         '</ul>'+
+        
         '</div>';
     return tooltip;
 }
@@ -105,7 +139,7 @@ function create_tooltip(task)
         },
         eventDidMount: function (info) {
             //console.log(info.event.extendedProps);
-            var tooltip = create_tooltip(info.event.extendedProps);//.description;
+            var tooltip = create_tooltip(info.event);//.description;
             //$(info.el).attr("data-original-title", tooltip)
             //$(info.el).tooltip({ container: "body"})
             $(info.el).tooltip({title: tooltip,
