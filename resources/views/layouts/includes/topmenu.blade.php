@@ -10,15 +10,10 @@
          <div class="collapse navbar-collapse" id="navbarSupportedContent">
              <!-- Left Side Of Navbar -->
              <ul class="navbar-nav mr-auto">
-                 @auth
-                    @if(Auth::user()->is_admin())
+                    @if(Auth::user() && Auth::user()->is_admin())
                         <li class="nav-item"><a class="nav-link" href="{{ route('users') }}">{{ __('Users') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('priorities.search') }}">{{ __('Priorities') }}</a></li>
                     @endif
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tasks.search') }}">{{ __('Tasks Panel') }}</a>
-                    </li>
-                 @endauth
              </ul>
 
              <!-- Right Side Of Navbar -->
@@ -34,9 +29,6 @@
                          </li>
                      @endif
                  @else
-                    <li class="nav-item"">
-                    <a class="nav-link" href="{{ route('tasks.list') }}">{{ __('Active Tasks') }}</a>
-                    </li>
  
                     <li class="nav-item dropdown">
                          <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

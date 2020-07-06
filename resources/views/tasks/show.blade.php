@@ -24,7 +24,7 @@
 </tr><tr><td>Status</td><td>{{ $task->status->name }}</td>
 </tr><tr><td>Priority</td><td>{{ $task->priority->name }}</td>
 </tr><tr><td>Reminder</td><td>{{ ($task->reminder)?'YES':'NO' }}</td>
-</tr><tr><td>Description</td><td>{{ $task->description }}</td>
+</tr><tr><td>Tags</td><td>{{$task->description }}</td>
 </tr>
 </table>
 

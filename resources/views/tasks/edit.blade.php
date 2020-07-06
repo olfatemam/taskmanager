@@ -61,7 +61,7 @@
 
 
 <div class="form-group">
-        {{ Form::label('description', 'Description') }}
+        <label for="description"><i class="fa fa-tags" aria-hidden="true">Tags</i></label>
         {{ Form::text('description', $task->description, array('class' => 'form-control')) }}
 </div>
     

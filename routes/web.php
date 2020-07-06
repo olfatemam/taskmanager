@@ -27,21 +27,24 @@ Route::resource('statuses', 'StatusController');
 Route::resource('users', 'UserController');
 
 Route::group(['middleware' => ['auth']], function(){
-Route::get('/home', 'HomeController@index')->name('home');
 
-Route::any('tasks.list', 'TaskController@list')->name('tasks.list');
+    Route::get('/home', 'HomeController@index')->name('home');
 
-Route::any('tasks.search', 'TaskController@search')->name('tasks.search');
+    Route::any('tasks.list_filtered/{filter}', 'TaskController@list_filtered')->name('tasks.list_filtered');
+    Route::any('tasks.list', 'TaskController@list')->name('tasks.list');
 
-Route::any('priorities.search', 'PriorityController@search')->name('priorities.search');
-Route::any('statuses.search', 'StatusController@search')->name('statuses.search');
+    Route::any('tasks.search', 'TaskController@search')->name('tasks.search');
 
-
-Route::post('users', 'UserController@search')->name('users');
-
-Route::get('tasks.calendar', 'TaskController@calendar')->name('tasks.calendar');
+    Route::any('priorities.search', 'PriorityController@search')->name('priorities.search');
+    Route::any('statuses.search', 'StatusController@search')->name('statuses.search');
 
 
-Route::get('tasks.complete/{id}', 'TaskController@complete')->name('tasks.complete');
+    Route::post('users', 'UserController@search')->name('users');
+
+    Route::get('tasks.calendar', 'TaskController@calendar')->name('tasks.calendar');
+    Route::get('tasks.tags', 'TaskController@tags')->name('tasks.tags');
+
+
+    Route::get('tasks.complete/{id}', 'TaskController@complete')->name('tasks.complete');
 
 });    

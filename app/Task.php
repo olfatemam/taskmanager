@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\DB;
 
 class Task extends Model
 {
+    const Active='Active';
+    const Today='Today';
+    const Coming='Coming';
+    const Overdue='Overdue';
+    const Finished='Finished';
+
     public function user()
     {
         return $this->belongsTo('App\User');
@@ -97,6 +103,7 @@ class Task extends Model
     }
     public function overdue()
     {
+        if($this->completed==true)return false;
         
         $tzone  = new \DateTimeZone($this->timezone);
         $now = new \DateTime("now", $tzone);

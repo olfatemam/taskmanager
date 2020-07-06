@@ -20,9 +20,11 @@ run from the installation folder the command "composer install --no-dev –optim
 7. admin can change access rights to other users and grant them admin rights or delete them from the system
 7. a user can see and manage only his own tasks
 
+done:
+add fullcalendar to view tasks in a planner like view 
 
 TBD:
-add fullcalendar to view tasks in a planner like view 
+what is the admin job? should the admin be able to view users tasks?what else can the admin do, manager team relation instead? manager can see his team tasks? can assign taks with due date?
 
 check todo popular websites for ideas, starting with todoist.com
 

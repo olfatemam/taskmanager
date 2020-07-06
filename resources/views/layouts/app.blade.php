@@ -11,7 +11,8 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app1.js') }}" ></script>
-    <script src="https://use.fontawesome.com/e21f027b5f.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.1/css/all.css" integrity="sha384-xxzQGERXS00kBmZW/6qxqJPyxW3UR0BPsL4c8ILaIWXva5kFi7TxkIIaMiKtqV1Q" crossorigin="anonymous">
+
     @yield('content_scripts')
 
     <!-- Fonts -->
@@ -24,41 +25,15 @@
 
 </head>
 <body>
-    <div id="app">
-        @include('layouts.navigation.topmenu')
+<div id="app">
+@include('layouts.includes.topmenu')
  
-        <main class="py-4">
-            
-            @if(Session::has('flash_message'))
-    
-            <div class="container">
-            <div class="panel panel-default">
-            <div class="panel-heading">
-            <div class="alert alert-success"><em> {!! session('flash_message') !!}</em>
-            </div>
-            </div>
-            </div>
-            </div>
-            @endif
-            @if ($errors->any())
-                <div class="container">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                <div class="alert alert-danger">
-                <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-                </ul>
-                </div>
-                </div>
-                </div>
-                </div>
-            @endif
+<main class="py-4">
 
-            @yield('content')
-        </main>
-    </div>
+    @include('layouts.includes.sidebar')
+    @include('layouts.includes.content')
+</main>
+</div>
 
 
 
