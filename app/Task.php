@@ -111,6 +111,33 @@ class Task extends Model
         
         return ($due<$now);
     }
+    
+    public function tags()
+    {
+        $tags_html="";
+        $tags_arr = explode(" ", $this->description);
+        foreach($tags_arr as $tag)
+        { 
+            $tags_html .='<span class="w3-border w3-round" style="margin-left:5px">' .$tag . '</span>&nbsp;';
+        }
+        return $tags_html;
+    }
+    public function state()
+    {
+        $state_html="";
+
+        if($this->overdue()==true)
+            $state_html.= '<span class="btn-warning rounded float-right" style="margin-left:5px">ovrdue</span>&nbsp;';
+
+        if($this->completed)
+            $state_html.= '<span class="btn-success rounded float-right" style="margin-left:5px">completed</span>&nbsp;';
+        
+        else if($this->reminder)//change to the time of the reminder based on the task attr : reminde_before
+            $state_html.= '<span class="btn-info rounded float-right" style="margin-left:5px">reminder</span>&nbsp;';
+        
+
+        return $state_html;
+    }
 
     public function hagar_due()
     {
@@ -118,5 +145,54 @@ class Task extends Model
         return $date->format("D j, M y   h:i A");
     }
     
-    
+    public static function get_tags_and_frequencies($user_id)
+    {
+        $descriptions = Task::select('description');
+        
+        if($user_id!=null && $user_id>0)
+            $descriptions = $descriptions->where('user_id', $user_id);
+        
+        $descriptions = $descriptions->get();
+        
+        
+        $tags = $descriptions->implode(' ');
+        $tags_array = explode(" ",$tags);
+        
+        //Array fr will store frequencies of element  
+        $fr = array_fill(0, count($tags_array), 0);  
+        $visited = -1;  
+   
+        for($i = 0; $i < count($tags_array); $i++)
+        {  
+            $count = 1;  
+            for($j = $i+1; $j < count($tags_array); $j++){  
+            if(strcmp($tags_array[$i], $tags_array[$j])==0)
+            {  
+                $count++;  
+                //To avoid counting same element again  
+                $fr[$j] = $visited;  
+            }  
+        }  
+        if($fr[$i] != $visited)  
+            $fr[$i] = $count;  
+        }  
+      
+        //Displays the frequency of each element present in array  
+        Log::info("-------------------------<br>");  
+        Log::info(" Element | Frequency<br>");  
+        Log::info("-------------------------<br>");  
+        
+        $result=[];
+        
+        for($i = 0; $i < count($fr); $i++)
+        {  
+            if($fr[$i] != $visited)
+            {  
+                $result[]=[$tags_array[$i], $fr[$i]];
+                Log::info(str_repeat(' ', 6) . $tags_array[$i] );  
+                Log::info(str_repeat(' ', 7) . "|" . str_repeat(' ', 7) . $fr[$i]);  
+            }  
+        }
+        return $result;
+    }  
 }

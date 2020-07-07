@@ -76,14 +76,28 @@ function get_staus_title(event)
     if(event.extendedProps.completed==false && moment(event.start).isBefore(moment())==true)
     {
         overdue='<span class="btn-warning rounded float-right">Ovrdue</span>'
-    }       
+    }
     if(event.extendedProps.completed==true)
     {
-         return '<span class="'+event.extendedProps.priority+'"><s>'+event.title+' </s></span>';
+         return '<span><s>'+event.title+'</s></span>';
     }
-    return '<span class="'+event.extendedProps.priority+'">'+event.title+overdue+'</span>';
+    return '<span>'+event.title+overdue+'</span>';
     
 }
+
+function tags(tags_string)
+{
+    if(!tags_string)return "";
+    $tags_html="";
+
+    var tags_arr = tags_string.split(" ");
+    tags_arr.forEach(function (tag) { 
+            tags = tag.replace(/\s/g,'');
+        $tags_html+='<i class="w3-border w3-round">'+tag+'</i>&nbsp;';
+    });
+    return $tags_html;
+}
+
 function create_tooltip(event)
 {
      task = event.extendedProps;
@@ -94,7 +108,7 @@ function create_tooltip(event)
         '<li><i class="fa fa-flag ' + task.priority + '" aria-hidden="true" ></i>'+' '+ 
         get_staus_title(event) +
         '</li>'+
-        '<li>'+task.description+'</li>'+
+        '<li>'+tags(task.description)+'</li>'+
         '<li>'+moment(event.start).format("lll")+'</li>'+
         '</ul>'+
         

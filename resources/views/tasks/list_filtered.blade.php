@@ -46,31 +46,19 @@ foreach(\App\Priority::get() as $priority)
 <hr>
 <div class="row" style="width:100%;margin-top: 20px;">
 <ul class="list-group col-md-12" style="width:100%">
-    <li class="list-group-item ">Active Tasks</li>
+    <li class="list-group-item "></li>
     @foreach ( $tasks as $task )
-    
-    <li class="list-group-item {{$task->priority->name}}" style="width: 100%">
-        
+    <li class="list-group-item" style="width: 100%">
         <a title="finish" class="btn-edit btn-primary col-md-1 {{$task->priority->name}}" href="{{route('tasks.complete', $task->id) }}"><i class="fa fa-check" aria-hidden="true"></i></a>
-        <a title="edit" class="col-md-1 btn-edit btn-primary {{$task->priority->name}}" href="{{route('tasks.edit', $task->id) }}"><i class="fa fa-edit" aria-hidden="true"></i></a>
+        <a title="edit" class="col-md-1 btn-edit btn-primary  {{$task->priority->name}}" href="{{route('tasks.edit', $task->id) }}"><i class="fa fa-edit" aria-hidden="true"></i></a>
         
         
         <span class="col-md-2">{{ $task->hagar_due() . ' ' }}</span>
         
-        <a class="col-md-3 {{$task->priority->name}}" href="{{route('tasks.show', $task->id) }}">{{$task->name.': '. $task->description }}</a>
-                    
-        @if($task->overdue()==true)
-            <span class="col-md-1 btn-warning rounded float-right">ovrdue</span>
-        @endif  
-
-        @if($task->reminder)
-            <span class="col-md-1 btn-info rounded float-right">reminder</span>
-        @endif
-
-        @if($task->completed)
-            <span class="col-md-1 btn-success rounded float-right">completed</span>
-        @endif
-        
+        <a class="col-md-3" href="{{route('tasks.show', $task->id) }}">{{$task->name }}</a>
+        {!!$task->tags()!!}
+        {!!$task->state()!!}
+                
     </li>
   
   @endforeach
