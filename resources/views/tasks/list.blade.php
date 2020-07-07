@@ -64,7 +64,7 @@ foreach(\App\Priority::get() as $priority)
         <a class="col-md-3 {{$task->priority->name}}" href="{{route('tasks.show', $task->id) }}">{{$task->name.': '. $task->description }}</a>
                     
         @if($task->overdue()==true)
-            <span class="col-md-1 btn-warning rounded float-right">ovrdue</span>
+            <span class="col-md-1 btn-warning rounded float-right">overdue</span>
         @endif  
 
         @if($task->reminder)

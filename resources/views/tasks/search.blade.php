@@ -1,51 +1,25 @@
 @extends('layouts.app')
 
+@section('content_styles')
+@include('tasks.includes.styles')
+@endsection
+
 @section('content')
 
 {{ Form::model(null, array('id'=>'searchform', 'route' => array('tasks.search'), 'method' => 'POST')) }}
 
 
-<div class="container">
-<div class="panel panel-default">
-<div class="panel-heading"><h3>Tasks</h3>
-<a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a>
-<a href="{{ route('tasks.create') }}" class="btn btn-primary float-right" style='margin-right: 10px'>Add Task</a>
-<div class='clearfix'></div>
-<div class="panel-body" >
-<div class="row" >
-    @if(Auth::user()->is_admin())    
-    <div class="col-md-3">
-        {{ Form::label('user_id', 'User', array('class'=>'')) }}
-        {{ Form::select('user_id', $users, -1, array('class' => 'form-control', 'placeholder'=>'') ) }}        
-    </div>
-    @else
-        {{ Form::hidden('user_id', Auth::user()->id) }}        
-    @endif
-    <div class="col-md-3">
-        {{ Form::label('priority_id', 'Priority', array('class'=>'')) }}
-        {{ Form::select('priority_id', $priorities, -1, array('id'=>'priority_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
-    </div>
+<div class="w3-container w3-padding w3-card">
+@include('tasks.includes.header', ['title'=>'Tasks Management'])
 
-    <div class="col-md-3 col-md-offset-1" >
-    {{ Form::submit('Search', array('class' => 'btn btn-primary', 'style'=>'width:100%;height:50px;margin-top:20px', 'id'=>'btn_search_packages')) }}
-    {{ Form::close() }}
-    </div>
-        
-</div>
+<div class="w3-padding w3-panel">
+
     
+@include('tasks.includes.control')
 
-
-<div class="row">
-<div class="col-md-12">
-    
-<div class=''>Page {{ $tasks->currentPage() }} of {{ $tasks->lastPage() }}
-</div>
-</div>
-</div>
-<div class="row">
-<div class="col-md-12">
-<div class="table-responsive">
-        <table class="table table-bordered table-striped">
+<div class="w3-row">
+<div class="w3-table w3-table-all">
+        <table class="w3-table w3-table-all">
         <thead>
                 <tr>
                     <th>Name</th>
@@ -82,17 +56,14 @@
         </table>
     </div>
 
-
 </div>
-</div>
-
-<div class="row text-center">
+<div class="w3-row w3-center">
     {!! $tasks->appends(Request::all())->render() !!}
 </div>
 
 </div>
 </div>
-</div>
-</div>
 
+
+{{ Form::close() }}
 @endsection

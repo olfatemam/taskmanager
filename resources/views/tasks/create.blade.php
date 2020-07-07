@@ -50,7 +50,11 @@
     
 <div class="form-group">
         {{ Form::label('priority_id', 'Priority', array('class'=>'')) }}
-        {{ Form::select('priority_id', $priorities, -1, array('required', 'id'=>'priority_id', 'class' => 'form-control', 'placeholder'=>'') ) }}        
+
+@foreach($priorities as $priority)
+<input type="radio" id="priority_id" name="priority_id" value="{{$priority->id}}" checked>
+<label class="{{$priority->name}}" for="priority_id">{{$priority->name}}</label>
+@endforeach
 </div>
 
 

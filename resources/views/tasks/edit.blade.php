@@ -1,8 +1,27 @@
 @extends('layouts.app')
 @section('title', '| Edit Task')
+
+@section('content_styles')
+<style>
+<?php
+foreach(\App\Priority::get() as $priority)
+{
+    echo PHP_EOL .'.' . $priority->name .
+            '{'. 
+            'background-color: '. $priority->background_color .';'.
+            'color: '. $priority->text_color .';'.
+            '}' ;
+}
+?>
+    
+</style>
+@endsection
+
 @section('content')
 
-{{ Form::model($task, array('route' => array('tasks.update', $task), 'method' => 'PUT')) }}
+
+
+{{ Form::model(null, array('route' => array('tasks.update', $task), 'method' => 'PUT')) }}
 
 <div class="container">
 
@@ -10,10 +29,9 @@
 <div class="panel panel-default">
 <div class="panel-heading"><h3>Edit Task
 <a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a></h3>
-<div class='clearfix'>
+<div class='clearfix'></div>
 </div>
-
-<div class="panel-body " style="margin-top: 20px">
+<div class="panel-body w3-padding w3-border" style="margin-top: 20px">
 
 <div class="row" style="width:100%">    
     
@@ -51,14 +69,12 @@
     
 <div class="form-group">
         {{ Form::label('priority_id', 'Priority', array('class'=>'')) }}
-        {{ Form::select('priority_id', $priorities, $task->priority_id, array('required', 'id'=>'priority_id', 'class' => 'form-control') ) }}        
+@foreach($priorities as $priority)
+<input type="radio" id="priority_id" name="priority_id" value="{{$priority->id}}" {{ ( $priority->id==$task->priority_id )? "checked": "" }} >
+
+<label class="{{$priority->name}}" for="priority_id">{{$priority->name}}</label>
+@endforeach
 </div>
-<!--<div class="form-group">
-        {{ Form::label('status_id', 'Status', array('class'=>'')) }}
-        {{ Form::select('status_id', $statuses, $task->status_id, array('required','id'=>'status_id', 'class' => 'form-control') ) }}        
-</div>-->
-
-
 
 <div class="form-group">
         <label for="description"><i class="fa fa-tags" aria-hidden="true">Tags</i></label>
@@ -67,11 +83,11 @@
     
 
 <div class="form-group row">
-    <div class="col-md-1" style='padding: 0;margin:0'>{{ Form::checkbox('reminder', 1, $task->reminder, array('class' => 'form-control', 'style'=>'margin-right:0')) }}</div>        
+    <div class="col-md-1" style='padding: 0;margin:0'>{{ Form::checkbox('reminder', 1, $task->reminder, array('id'=>'reminder', 'class' => 'form-control', 'style'=>'margin-right:0')) }}</div>        
     <div class="col-md-2" >{{ Form::label('reminder', 'Send Reminder', array('style'=>'')) }}</div>        
 </div>
 <div class="form-group row">
-    <div class="col-md-1" style='padding: 0;margin:0'>{{ Form::checkbox('completed', 1, $task->completed, array('class' => 'form-control', 'style'=>'margin-right:0')) }}</div>        
+    <div class="col-md-1" style='padding: 0;margin:0'>{{ Form::checkbox('completed', 1, $task->completed, array('id'=>'completed', 'class' => 'form-control', 'style'=>'margin-right:0')) }}</div>        
     <div class="col-md-2" >{{ Form::label('completed', 'Completed', array('style'=>'')) }}</div>        
 </div>
     <hr>
@@ -85,7 +101,7 @@
 </div>
 </div>
 </div>
-</div>
+
 {{ Form::close() }}
 
 @endsection
@@ -105,6 +121,17 @@
 
 
 $(document).ready(function(){
+    $('#completed').change(function() {
+        if(this.checked) {
+            $('#reminder').prop( "checked", false);
+        }
+});
+    $('#reminder').change(function() {
+        if(this.checked) {
+        $('#completed').prop( "checked", false);
+    }
+});
+            
     var tz = moment.tz.guess();
     
     $("#timezone").val(tz);

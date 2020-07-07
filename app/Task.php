@@ -127,7 +127,7 @@ class Task extends Model
         $state_html="";
 
         if($this->overdue()==true)
-            $state_html.= '<span class="btn-warning rounded float-right" style="margin-left:5px">ovrdue</span>&nbsp;';
+            $state_html.= '<span class="btn-warning rounded float-right" style="margin-left:5px">overdue</span>&nbsp;';
 
         if($this->completed)
             $state_html.= '<span class="btn-success rounded float-right" style="margin-left:5px">completed</span>&nbsp;';

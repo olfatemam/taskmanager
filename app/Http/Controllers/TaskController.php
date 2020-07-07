@@ -28,8 +28,12 @@ class TaskController extends Controller
         
         if($request['user_id']>0)$tasks = $tasks->where('user_id',$user_id);
         
+        if($request['priority_id'])
+        {
+            Log::info("priority_id",$request['priority_id']);
+            $tasks=$tasks->whereIn('priority_id', $request['priority_id']);
+        }
         $tag_search = $request['tag_search'];
-        
         
         if($tag_search)
         {
@@ -47,8 +51,9 @@ class TaskController extends Controller
             }
         }
         $tasks=$tasks->paginate(10);
+        $priorities= Priority::get();//pluck('name', 'id');
         $request->flash();
-        return view('tasks.tags', compact('users', 'tags', 'tasks'));
+        return view('tasks.tags', compact('priorities', 'users', 'tags', 'tasks'));
     }
     
     public function index() 
@@ -69,6 +74,13 @@ class TaskController extends Controller
         if($request['user_id'])
         {
             $tasks = $query->where('user_id',$request['user_id']);
+        }
+        
+
+        if($request['priority_id'])
+        {
+            Log::info("priority_id",$request['priority_id']);
+            $tasks=$tasks->whereIn('priority_id', $request['priority_id']);
         }
         
         switch($filter)
@@ -96,9 +108,10 @@ class TaskController extends Controller
             break;
         }
         $tasks=$query->paginate(10);
+        $priorities= Priority::get();//pluck('name', 'id');
         $request->flash();
         
-        return view('tasks.list_filtered', compact('tasks', 'users', 'filter'));
+        return view('tasks.list_filtered', compact('tasks', 'users', 'priorities','filter'));
     }
     
     public function search(Request $request)
@@ -119,25 +132,27 @@ class TaskController extends Controller
         {
             $tasks=$tasks->where('completed',false);
         }
+                
         if($request['priority_id'])
         {
-            $tasks=$tasks->where('priority_id',$request['priority_id']);
+            Log::info("priority_id",$request['priority_id']);
+            $tasks=$tasks->whereIn('priority_id', $request['priority_id']);
         }
         $tasks=$tasks->paginate(10); //show only 5 items at a time in descending order
-        $priorities= Priority::pluck('name', 'id');
-
+        
         $users= $this->get_users_for_select();
 
         $request->flash();
 
+        $priorities= Priority::get();//pluck('name', 'id');
+        
         return view($view, compact('route', 'tasks', 'users','priorities'));
     }
 
     public function create()
     {
         
-        //$statuses=Status::pluck('name', 'id');
-        $priorities= Priority::pluck('name', 'id');
+        $priorities= Priority::get();//pluck('name', 'id');
         
         return view('tasks.create', compact('priorities'));
     }
@@ -177,9 +192,9 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
-        $statuses=Status::pluck('name', 'id');
-        $priorities= Priority::pluck('name', 'id');
-        return view('tasks.edit', compact('task', 'statuses', 'priorities'));
+        
+        $priorities= Priority::get();
+        return view('tasks.edit', compact('task', 'priorities'));
     }
 
     public function complete($id)

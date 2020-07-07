@@ -70,7 +70,7 @@ function get_staus_title(event)
     overdue="";
     if(event.extendedProps.completed==false && moment(event.start).isBefore(moment())==true)
     {
-        overdue='<span class="btn-warning rounded float-right">Ovrdue</span>'
+        overdue='<span class="btn-warning rounded float-right">Overdue</span>'
     }
     if(event.extendedProps.completed==true)
     {
