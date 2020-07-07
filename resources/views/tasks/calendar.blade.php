@@ -7,6 +7,13 @@
 <div class="panel-body" >
 <div id='calendar'></div>
 
+<div class="dayClickWindow">
+
+</div>
+
+<div class="eventClickWindow">
+</div>
+
 </div>
 </div>
 </div>
@@ -41,7 +48,20 @@
     box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)
 }
 
-
+.dayClickWindow,eventClickWindow
+{
+  width: 500px;
+  height: 500px;
+  border-radius: 15px;
+  background-color: #000;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -250px;
+  margin-left: -250px;
+  display: none;
+  z-index: 1;
+}
 <?php
 foreach(\App\Priority::get() as $priority)
 {
@@ -117,19 +137,25 @@ function create_tooltip(event)
     jsn_tasks = {!! json_encode($tasks); !!};
     //    
         
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-//      plugins: [ interactionPlugin ],
-//      initialDate: '2020-06-12',
-//      editable: true,
-//      selectable: true,
-//      businessHours: true,
-//      dayMaxEvents: true, // allow "more" link when too many tasks
-//      
-//            
-        "events": jsn_tasks,
+    var calendar = new FullCalendar.Calendar(calendarEl, 
+    {
+    headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+    },
+    
+    initialDate: '2020-06-12',
+    navLinks: true, // can click day/week names to navigate views
+    businessHours: true, // display business hours
+    editable: true,
+    selectable: true,
+
+    "events": jsn_tasks,
         
         dateClick: function(date, jsEvent, view)
         {
+            //$('.dayClickWindow').show();
         },
         eventClick:function(event)
         {
