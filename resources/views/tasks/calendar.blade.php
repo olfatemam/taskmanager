@@ -110,7 +110,7 @@ function create_tooltip(event)
         get_staus_title(event) +
         '</li>'+
         '<li>'+format_tags(task.description)+'</li>'+
-        '<li>'+moment(event.start).format("lll")+'</li>'+
+        '<li>'+moment(event.start).format("MMM Do, ddd h:m a")+'</li>'+
         '</ul>'+
         
         '</div>';
