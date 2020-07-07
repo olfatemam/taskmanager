@@ -42,7 +42,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('users', 'UserController@search')->name('users');
 
     Route::get('tasks.calendar', 'TaskController@calendar')->name('tasks.calendar');
-    Route::get('tasks.tags', 'TaskController@tags')->name('tasks.tags');
+    Route::any('tasks.tags', 'TaskController@tags')->name('tasks.tags');
 
 
     Route::get('tasks.complete/{id}', 'TaskController@complete')->name('tasks.complete');

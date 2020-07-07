@@ -40,11 +40,6 @@
     opacity: 1;
     box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)
 }
-.w3-card-4,.w3-hover-shadow:hover{opacity:1!important;box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)}
-.w3-ul{list-style-type:none;padding:0;margin:0}.w3-ul li{padding:8px 16px;border-bottom:1px solid #ddd}.w3-ul li:last-child{border-bottom:none}
-.w3-tooltip,.w3-display-container{position:relative}.w3-tooltip .w3-text{display:none}.w3-tooltip:hover .w3-text{display:inline-block}
-.w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
-.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
 
 
 <?php
@@ -102,7 +97,6 @@ function format_tags(tags_string)
 function create_tooltip(event)
 {
      task = event.extendedProps;
-    //console.log(task);
     tooltip=
         '<div class="w3-tooltip" style="width:18rem" >'+
         '<ul class="w3-ul">'+
@@ -121,10 +115,7 @@ function create_tooltip(event)
   {
     var calendarEl = document.getElementById('calendar');
     jsn_tasks = {!! json_encode($tasks); !!};
-//    
-//    jsn_tasks.forEach(function (task) { 
-//            task.tooltip=create_tooltip(task); 
-//        }); 
+    //    
         
     var calendar = new FullCalendar.Calendar(calendarEl, {
 //      plugins: [ interactionPlugin ],

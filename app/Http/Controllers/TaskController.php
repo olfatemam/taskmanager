@@ -18,9 +18,37 @@ class TaskController extends Controller
         $this->middleware('auth');
     }
     
-    public function tags() 
+    public function tags(Request $request) 
     {
-        return view('tasks.tags');
+        $users= $this->get_users_for_select();
+        
+        $tags = Task::get_tags_and_frequencies($request['user_id']);
+        
+        $tasks=Task::select("*");
+        
+        if($request['user_id']>0)$tasks = $tasks->where('user_id',$user_id);
+        
+        $tag_search = $request['tag_search'];
+        
+        
+        if($tag_search)
+        {
+            $keywords = explode(" ", $tag_search);
+            Log::info('$keywords', $keywords);
+            if(count($keywords)>0)
+            {
+                $result = $tasks->where(function($query) use($keywords)
+                {
+                        foreach($keywords as $keyword)
+                        {
+                            $query->orWhere('description', 'LIKE', "%$keyword%");
+                        }
+                });
+            }
+        }
+        $tasks=$tasks->paginate(10);
+        $request->flash();
+        return view('tasks.tags', compact('users', 'tags', 'tasks'));
     }
     
     public function index() 
@@ -34,22 +62,11 @@ class TaskController extends Controller
     
     public function list_filtered(Request $request, $filter)
     {
-        if(Auth::user()->is_admin())
-        {
-            $users= User::pluck('name', 'id');//->where('role', 'User');
-        }
-        else
-        {
-            $users= collect([Auth::user()]);
-            $users=$users->pluck('name', 'id');
-        }
+        $users= $this->get_users_for_select();
+
         $query = Task::select("*");
 
-        if(Auth::user()->is_admin()==false)
-        {
-            $tasks = $query->where('user_id',Auth::user()->id);
-        }
-        elseif($request['user_id'])
+        if($request['user_id'])
         {
             $tasks = $query->where('user_id',$request['user_id']);
         }
@@ -93,11 +110,7 @@ class TaskController extends Controller
     {
         $tasks = Task::orderby('due', 'asc');
         
-        if(Auth::user()->is_admin()==false)
-        {
-            $tasks=$tasks->where('user_id',Auth::user()->id);
-        }
-        elseif($request['user_id'])
+        if($request['user_id'])
         {
             $tasks=$tasks->where('user_id',$request['user_id']);
         }
@@ -112,16 +125,11 @@ class TaskController extends Controller
         }
         $tasks=$tasks->paginate(10); //show only 5 items at a time in descending order
         $priorities= Priority::pluck('name', 'id');
-        if(Auth::user()->is_admin())
-        {
-            $users= User::pluck('name', 'id');//->where('role', 'User');
-        }
-        else
-        {
-            $users= collect([Auth::user()]);
-            $users=$users->pluck('name', 'id');
-        }
+
+        $users= $this->get_users_for_select();
+
         $request->flash();
+
         return view($view, compact('route', 'tasks', 'users','priorities'));
     }
 
@@ -224,5 +232,18 @@ class TaskController extends Controller
         $tasks= \App\Task::get_calendar_user_tasks();
         return view('tasks.calendar', compact('tasks'));
     }
-    
+    private function get_users_for_select()
+    {
+        if(Auth::user()->is_admin())
+        {
+            $users= User::pluck('name', 'id');//->where('role', 'User');
+        }
+        else
+        {
+            $users= collect([Auth::user()]);
+            $users=$users->pluck('name', 'id');
+        }        
+        return $users;
+    }
+        
 }

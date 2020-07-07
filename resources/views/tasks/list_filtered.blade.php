@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content_styles')
 <style>
-    <?php
+<?php
 foreach(\App\Priority::get() as $priority)
 {
     echo PHP_EOL .'.' . $priority->name .
