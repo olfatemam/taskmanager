@@ -85,9 +85,10 @@ function get_staus_title(event)
     
 }
 
-function tags(tags_string)
+function format_tags(tags_string)
 {
     if(!tags_string)return "";
+    
     $tags_html="";
 
     var tags_arr = tags_string.split(" ");
@@ -108,7 +109,7 @@ function create_tooltip(event)
         '<li><i class="fa fa-flag ' + task.priority + '" aria-hidden="true" ></i>'+' '+ 
         get_staus_title(event) +
         '</li>'+
-        '<li>'+tags(task.description)+'</li>'+
+        '<li>'+format_tags(task.description)+'</li>'+
         '<li>'+moment(event.start).format("lll")+'</li>'+
         '</ul>'+
         
