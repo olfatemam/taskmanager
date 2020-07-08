@@ -22,7 +22,13 @@ class TaskController extends Controller
     public function index() 
     {
     }
-
+    public function tags(Request $request, $tag)
+    {
+        $request['tag_search']=$tag;
+        Log::info("$request[tag_search]=" . $request['tag_search']);
+        return $this->search($request, TaskFilter::Tags);
+    }
+    
     public function search(Request $request, $filter)
     {
         $rows_style=($filter==TaskFilter::Search)?'table':'ul';

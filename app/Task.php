@@ -145,8 +145,8 @@ class Task extends Model
     public static function get_tags_and_frequencies()
     {
         $descriptions = Task::select('description');
-        
-        $descriptions = $descriptions->where('user_id', Auth::user()->id);
+        if(Auth::user()->is_admin()==false)
+            $descriptions = $descriptions->where('user_id', Auth::user()->id);
             
         $descriptions = $descriptions->get();
         

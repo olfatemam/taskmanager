@@ -32,6 +32,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::any('tasks.search/{filter}', 'TaskController@search')->name('tasks.search');
 
+    Route::any('tasks.tags/{tag}', 'TaskController@tags')->name('tasks.tags');
+
     Route::any('priorities.search', 'PriorityController@search')->name('priorities.search');
 
     Route::any('statuses.search', 'StatusController@search')->name('statuses.search');
