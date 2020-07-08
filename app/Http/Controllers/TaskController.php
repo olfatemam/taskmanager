@@ -25,7 +25,7 @@ class TaskController extends Controller
     public function tags(Request $request, $tag)
     {
         $request['tag_search']=$tag;
-        Log::info("$request[tag_search]=" . $request['tag_search']);
+        //log::info("$request[tag_search]=" . $request['tag_search']);
         return $this->search($request, TaskFilter::Tags);
     }
     
@@ -75,11 +75,11 @@ class TaskController extends Controller
             
             $task->save();
             
-            return redirect()->route('tasks.search');//->with('flash_message', 'Task '. $task->name.' created');
+            return redirect()->route('tasks.search', TaskFilter::Search);//->with('flash_message', 'Task '. $task->name.' created');
         }
         catch (\PDOException $e)
         {
-            //Log::info('exception: ', print_r($e, false));
+            ////log::info('exception: ', print_r($e, false));
             return \App\Helpers\DBError::report($e);
         }
         
@@ -125,8 +125,7 @@ class TaskController extends Controller
             
             $task->save();
 
-            return redirect()->route('tasks.search', 
-                $task->id)->with('flash_message', 'Task, '. $task->name.' updated');
+            return redirect()->route('tasks.search',TaskFilter::Search)->with('flash_message', 'Task, '. $task->name.' updated');
         }
         
         catch (\PDOException $e)
@@ -138,9 +137,17 @@ class TaskController extends Controller
     
     public function destroy(Task $task)
     {
-        $task->delete();
-        return redirect()->route('tasks.search')
-            ->with('flash_message', 'Task deleted!');
+        try
+        {
+            Log::info('hello');
+            $task->delete();
+            return redirect()->route('tasks.search', TaskFilter::Search)
+                ->with('flash_message', 'Task deleted!');
+        }
+        catch (\PDOException $e)
+        {
+            return \App\Helpers\DBError::report($e);
+        }
     }
     
     public function calendar()

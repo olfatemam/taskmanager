@@ -22,13 +22,17 @@ foreach(\App\Priority::get() as $priority)
 
 
 {{ Form::model(null, array('route' => array('tasks.update', $task), 'method' => 'PUT')) }}
+{{ Form::hidden('timezone', "UTC", array('id'=>'timezome') ) }}
 
 <div class="container">
 
     
 <div class="panel panel-default">
-<div class="panel-heading"><h3>Edit Task
-<a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a></h3>
+<div class="panel-heading"><h5>Edit Task
+<a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a>
+            <span name='timezone_text' id='timezone_text' class ='btn btn-info float-right' >UTC</span>
+    </h5>
+        {{ Form::text('timezone', 'UTC', array('readonly', 'class' => 'w3-btn float-right')) }}
 <div class='clearfix'></div>
 </div>
 <div class="panel-body w3-padding w3-border" style="margin-top: 20px">
@@ -132,20 +136,21 @@ $(document).ready(function(){
     }
 });
             
-    var tz = moment.tz.guess();
-    
-    $("#timezone").val(tz);
 
-    var due = moment("{{$task->due}}");
+ var tz = moment.tz.guess();
+    $("#timezone").val(tz);
+    $("#timezone_text").text(tz);
+    
+ //moment.utc("2013-11-18 11:55").tz("Asia/Taipei");
+ 
+    var due = moment.utc("{{$task->due}}").tz({{$task->timezone}});
     
     $('#datetimepicker1').datetimepicker({
         date: due,
     });
  
     $("form").submit(function(){
-
-    });
-
+   });
 });
 
 </script>

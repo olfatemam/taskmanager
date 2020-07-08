@@ -35,8 +35,13 @@ class Task extends Model
         $this->user_id      =   Auth::user()->id;//$request['name'];
         $this->description  =   $request['description'];
         
+//store in utc
         
-        $date =  new \DateTime($request['due']); 
+        $tzone =  new \DateTimeZone($request['timezone']); 
+        $utczone =  new \DateTimeZone("UTC"); 
+        $date =  new \DateTime($request['due'], $tzone); 
+        $date->setTimezone($utczone);
+        
         $this->due          =   $date->format('Y-m-d H:i:s');
         
         $this->priority_id  =   $request['priority_id'];
@@ -56,6 +61,17 @@ class Task extends Model
         
     }
           
+
+    public function hagar_due()
+    {
+        $utczone =  new \DateTimeZone("UTC"); 
+        $tzone =  new \DateTimeZone($this->timezone); 
+        $date =  new \DateTime($this->due, $utczone); 
+        $date->setTimezone($tzone);
+        
+        return $date->format("D j, M   h:i A");
+    }
+        
     public function send_reminder_email()
     {
         Mail::to($this->user)->cc('olfat.emam@gmail.com')->send(new \App\Mail\TaskReminder($this));
@@ -76,7 +92,7 @@ class Task extends Model
                 . ' tasks.id as task_id, '
                 . ' tasks.name as title, '
                 . ' tasks.id as id, '
-                . ' tasks.due as start, '
+                . ' tasks.due as due, '
                 . ' tasks.completed as completed, '
                 . ' tasks.description as description, '
                 . ' tasks.timezone as timezone, '
@@ -136,12 +152,6 @@ class Task extends Model
         return $state_html;
     }
 
-    public function hagar_due()
-    {
-        $date = new \DateTime($this->due);
-        return $date->format("D j, M   h:i A");
-    }
-    
     public static function get_tags_and_frequencies()
     {
         $descriptions = Task::select('description');
@@ -152,10 +162,10 @@ class Task extends Model
         
         
         $tags = $descriptions->implode('description', ' ');
-        Log::info('all tags='.$tags);
+        //log::info('all tags='.$tags);
         
         $tags_array = explode(' ',$tags);
-        Log::info('tags aray=', $tags_array);
+        //log::info('tags aray=', $tags_array);
         //Array fr will store frequencies of element  
         $fr = array_fill(0, count($tags_array), 0);  
         $visited = -1;  
@@ -176,8 +186,8 @@ class Task extends Model
         }  
       
         //Displays the frequency of each element present in array  
-        Log::info("-------------------------<br>");  
-        Log::info(" Element | Frequency<br>");  
+        //log::info("-------------------------<br>");  
+        //log::info(" Element | Frequency<br>");  
         
         $result=[];
         
@@ -188,7 +198,7 @@ class Task extends Model
                 $result[]=[$tags_array[$i], $fr[$i]];
             }  
         }
-        Log::info("-------------------------<br>");  
+        //log::info("-------------------------<br>");  
         return $result;
     }  
 
@@ -208,7 +218,7 @@ class Task extends Model
         if($tag_search)
         {
             $keywords = explode(" ", $tag_search);
-            Log::info('$keywords', $keywords);
+            //log::info('$keywords', $keywords);
             if(count($keywords)>0)
             {
                 $result = $tasks->where(function($query) use($keywords)

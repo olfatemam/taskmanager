@@ -39,14 +39,15 @@
   font-size: medium;
   font-family: sans-serif;
   text-align: left !important;
+  width:300px;
 } 
 
-.w3-card,.w3-card-2
+/*.w3-card,.w3-card-2
 {
     background: white;
     opacity: 1;
     box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)
-}
+}*/
 
 .dayClickWindow,eventClickWindow
 {
@@ -88,16 +89,15 @@ function get_staus_title(event)
 {
     
     overdue="";
-    if(event.extendedProps.completed==false && moment(event.start).isBefore(moment())==true)
-    {
-        overdue='<span class="btn-warning rounded float-right">Overdue</span>'
-    }
     if(event.extendedProps.completed==true)
     {
          return '<span><s>'+event.title+'</s></span>';
     }
+    if(moment(event.start).isBefore(moment())==true)
+    {
+        overdue=' <span class="rounded badge w3-yellow">Overdue</span>'
+    }
     return '<span>'+event.title+overdue+'</span>';
-    
 }
 
 function format_tags(tags_string)
@@ -109,7 +109,7 @@ function format_tags(tags_string)
     var tags_arr = tags_string.split(" ");
     tags_arr.forEach(function (tag) { 
             tags = tag.replace(/\s/g,'');
-        $tags_html+='<i class="w3-border w3-round">'+tag+'</i>&nbsp;';
+        $tags_html+='<i class="w3-border round badge">'+tag+'</i>&nbsp;';
     });
     return $tags_html;
 }
@@ -118,13 +118,12 @@ function create_tooltip(event)
 {
      task = event.extendedProps;
     tooltip=
-        '<div class="w3-tooltip" style="width:18rem" >'+
+        '<div class="w3-tooltip" >'+
         '<ul class="w3-ul">'+
         '<li><i class="fa fa-flag ' + task.priority + '" aria-hidden="true" ></i>'+' '+ 
-        get_staus_title(event) +
-        '</li>'+
+        get_staus_title(event) +'</li>'+
         '<li>'+format_tags(task.description)+'</li>'+
-        '<li>'+moment(event.start).format("MMM Do, ddd h:m a")+'</li>'+
+//            '<li>'+moment.utc(task.due).tz(task.timezone).format("MMM Do, ddd h:m a")+' '+ task.timezone+'</li>'+
         '</ul>'+
         
         '</div>';
@@ -135,7 +134,10 @@ function create_tooltip(event)
   {
     var calendarEl = document.getElementById('calendar');
     jsn_tasks = {!! json_encode($tasks); !!};
-    //    
+    
+    jsn_tasks.forEach(function (task) {
+        task.start = task.due;//moment.utc(task.due);
+    });
         
     var calendar = new FullCalendar.Calendar(calendarEl, 
     {
@@ -178,7 +180,7 @@ function create_tooltip(event)
                   container: 'body',
                   html:true,
                   placement:"left",
-                  template:'<div class="tooltip "  role="tooltip">\n\
+                  template:'<div class="tooltip"  role="tooltip">\n\
                 <div class="tooltip-arrow"></div><div class="tooltip-inner w3-card" \n\
                         style="margin:0;padding:0;"></div></div>',
                   delay: { "show": 500, "hide": 300 }

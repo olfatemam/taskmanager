@@ -9,7 +9,7 @@
                     <th>Completed</th>
                     <th>Reminder</th>
                     <th>Description</th>
-                    <th>Operations</th>
+                    <th colspan="2">Operations</th>
                 </tr>
             </thead>
 
@@ -24,11 +24,12 @@
                     <td>{{ ($task->reminder)?'YES':'NO' }}</td>
                     <td>{{ $task->description }}</td>
                     <td>
-                    <a href="{{ route('tasks.edit', $task) }}" class="btn btn-primary btn-edit pull-left" style="margin-right: 3px;">Edit</a>
+                        <a href="{{ route('tasks.edit', $task) }}" class="btn btn-edit w3-blue"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                    </td>
+                    <td>
                     {!! Form::open(['method' => 'DELETE', 'route' => ['tasks.destroy', $task] ]) !!}
                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
                     {!! Form::close() !!}
-
                     </td>
                 </tr>
                 @endforeach

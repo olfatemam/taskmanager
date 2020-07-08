@@ -18,7 +18,7 @@ class DBError {
             $message = $e->getMessage();
             $my_array  = preg_split("/:/", $message);
         
-            Log::info($my_array[2]);
+            //log::info($my_array[2]);
             $message = str_replace ("(SQL", "",  $my_array[2]);
         }
         return redirect()->to(app(UrlGenerator::class)->previous())->withErrors(array('message' => $message));

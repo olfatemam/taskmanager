@@ -89,7 +89,7 @@ class UserController extends Controller
         }
         catch (\PDOException $e)
         {
-            //Log::info('exception: ', print_r($e, false));
+            ////log::info('exception: ', print_r($e, false));
             return \App\Helpers\DBError::report($e);
         }
         

@@ -3,12 +3,15 @@
 
 {{ Form::open(array('route' => 'tasks.store', 'method' => 'post')) }}
 
+{{ Form::hidden('timezone', "UTC", array('id'=>'timezome') ) }}
+
 <div class="container">
 
     
 <div class="panel panel-default">
-<div class="panel-heading"><h3>Create New Task
-<a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a></h3>
+<div class="panel-heading"><h5>Create New Task
+        <a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a>
+        <span name='timezone_text' id='timezone_text' class ='btn btn-info float-right' >UTC</span></h5>
 <div class='clearfix'>
 </div>
 
@@ -35,12 +38,6 @@
             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
         </div>
         </div>
-    </div>
-</div>
-<div class="col-md-6" >
-    <div class="form-group">
-        {{ Form::label('timezone', 'Time Zone', array('class'=>'')) }}
-        {{ Form::text('timezone', 'UTC', array('readonly', 'class' => 'form-control')) }}
     </div>
 </div>
 </div>
@@ -102,6 +99,7 @@ $(document).ready(function(){
 
  var tz = moment.tz.guess();
  $("#timezone").val(tz);
+ $("#timezone_text").text(tz);
  
 $("form").submit(function(){
 });
