@@ -25,16 +25,9 @@ class TaskController extends Controller
 
     public function search(Request $request, $filter)
     {
-        $tags=null;$search_tags=false;
         $rows_style=($filter==TaskFilter::Search)?'table':'ul';
         
         $user_id = self::get_user_id($request['user_id']);
-        
-        if($filter==TaskFilter::Tags)
-        {
-            $tags = Task::get_tags_and_frequencies($user_id);
-            $search_tags = true;
-        }
         
         $tasks = Task::Search($request, $user_id, $filter);
         
@@ -46,7 +39,7 @@ class TaskController extends Controller
         $priorities= Priority::get();
         
         $request->flash();
-        return view('tasks.seach', compact('priorities', 'users', 'tasks', 'filter', 'tags', 'search_tags', 'rows_style'));
+        return view('tasks.search', compact('priorities', 'users', 'tasks', 'filter', 'rows_style'));
     }
     
     

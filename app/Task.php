@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\Enum\TaskFilter;
+use Carbon\Carbon;
 
 class Task extends Model
 {
@@ -138,22 +139,23 @@ class Task extends Model
     public function hagar_due()
     {
         $date = new \DateTime($this->due);
-        return $date->format("D j, M y   h:i A");
+        return $date->format("D j, M   h:i A");
     }
     
-    public static function get_tags_and_frequencies($user_id)
+    public static function get_tags_and_frequencies()
     {
         $descriptions = Task::select('description');
         
-        if($user_id!=null && $user_id>0)
-            $descriptions = $descriptions->where('user_id', $user_id);
-        
+        $descriptions = $descriptions->where('user_id', Auth::user()->id);
+            
         $descriptions = $descriptions->get();
         
         
-        $tags = $descriptions->implode(' ');
-        $tags_array = explode(" ",$tags);
+        $tags = $descriptions->implode('description', ' ');
+        Log::info('all tags='.$tags);
         
+        $tags_array = explode(' ',$tags);
+        Log::info('tags aray=', $tags_array);
         //Array fr will store frequencies of element  
         $fr = array_fill(0, count($tags_array), 0);  
         $visited = -1;  
@@ -176,7 +178,6 @@ class Task extends Model
         //Displays the frequency of each element present in array  
         Log::info("-------------------------<br>");  
         Log::info(" Element | Frequency<br>");  
-        Log::info("-------------------------<br>");  
         
         $result=[];
         
@@ -185,10 +186,9 @@ class Task extends Model
             if($fr[$i] != $visited)
             {  
                 $result[]=[$tags_array[$i], $fr[$i]];
-                Log::info(str_repeat(' ', 6) . $tags_array[$i] );  
-                Log::info(str_repeat(' ', 7) . "|" . str_repeat(' ', 7) . $fr[$i]);  
             }  
         }
+        Log::info("-------------------------<br>");  
         return $result;
     }  
 

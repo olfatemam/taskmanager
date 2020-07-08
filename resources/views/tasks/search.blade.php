@@ -16,7 +16,7 @@
 <div class="w3-padding w3-panel">
 
     
-@include('tasks.includes.control', ['search_tags'=>$search_tags, 'tags'=>$tags])
+@include('tasks.includes.control')
 
 @if($rows_style=='table')
     @include('tasks.includes.rows_table', ['tasks'=>$tasks])

@@ -8,17 +8,7 @@
                 {{ Form::hidden('user_id', Auth::user()->id) }}        
             @endif            
         </td>            
-        
-        @if($search_tags==true)
-            @if($tags!=null)
-            <td class="">
-                @foreach($tags as $tag)
-                    <span class="w3-border w3-round" style="margin-left:5px"> {{ $tag[0] }}</span>&nbsp;
-                @endforeach
-            </td>
-            @endif
-            <td class="">{{ Form::text('tag_search', null, array('class' => 'form-control', 'placeholder'=>'Search Tags') ) }}        </td>
-        @endif
+        <td >{{ Form::text('tag_search', null, array('class' => 'form-control', 'placeholder'=>'Search Tags') ) }}        </td>
         
         <td class="w3-center">Priority:
             @foreach($priorities as $priority)
