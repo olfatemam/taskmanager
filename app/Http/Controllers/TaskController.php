@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Log;
 
 use Auth;
 use App\Task;
+use App\Enum\TaskFilter;
 use Carbon\Carbon;
 use App\User;
 use App\Status;
@@ -17,166 +18,38 @@ class TaskController extends Controller
     {
         $this->middleware('auth');
     }
-    
-    public function tags(Request $request) 
-    {
-        $users= $this->get_users_for_select();
-        $user_id = $this->get_user_id($request['user_id']);
-        $tags = Task::get_tags_and_frequencies($user_id);
-        
-        $tasks=Task::select("*");
-        
-        
-        if($user_id>0)
-        {
-            $tasks=$tasks->where('user_id',$user_id);
-        }
-        
-        
-        if($request['priority_id'])
-        {
-            Log::info("priority_id",$request['priority_id']);
-            $tasks=$tasks->whereIn('priority_id', $request['priority_id']);
-        }
-        $tag_search = $request['tag_search'];
-        
-        if($tag_search)
-        {
-            $keywords = explode(" ", $tag_search);
-            Log::info('$keywords', $keywords);
-            if(count($keywords)>0)
-            {
-                $result = $tasks->where(function($query) use($keywords)
-                {
-                        foreach($keywords as $keyword)
-                        {
-                            $query->orWhere('description', 'LIKE', "%$keyword%");
-                        }
-                });
-            }
-        }
-        $tasks=$tasks->paginate(10);
-        $priorities= Priority::get();//pluck('name', 'id');
-        $request->flash();
-        
-                
-        return view('tasks.generic_seach', compact('priorities', 'users', 'tasks'))
-                                        ->with('route','tasks.tags')
-                                        ->with('param',null)
-                                        ->with('tags',$tags)
-                                        ->with('title','Search Tags')
-                                        ->with('search_tags',true)
-                                        ->with('rows_style','ul');
-    }
-    
+
     public function index() 
     {
     }
 
-    public function list(Request $request)
+    public function search(Request $request, $filter)
     {
-        return $this->search_generic($request, 'tasks.list', 'tasks.list', true);
-    }
-    
-    public function list_filtered(Request $request, $filter)
-    {
-        $users= $this->get_users_for_select();
-
-        $query = Task::select("*");
-
-        $user_id = $this->get_user_id($request['user_id']);
-        if($user_id>0)
+        $tags=null;$search_tags=false;
+        $rows_style=($filter==TaskFilter::Search)?'table':'ul';
+        
+        $user_id = self::get_user_id($request['user_id']);
+        
+        if($filter==TaskFilter::Tags)
         {
-            $query=$query->where('user_id',$user_id);
-        }
-                
-
-        if($request['priority_id'])
-        {
-            Log::info("priority_id",$request['priority_id']);
-            $tasks=$tasks->whereIn('priority_id', $request['priority_id']);
+            $tags = Task::get_tags_and_frequencies($user_id);
+            $search_tags = true;
         }
         
-        switch($filter)
-        {
-            case Task::Today:
-                $query = $query->whereDate('due', '=',Carbon::today()->toDateString());
-            break;
-            case Task::Active:
-                $query = $query->where('completed', false);
-            break;
+        $tasks = Task::Search($request, $user_id, $filter);
         
-            case Task::Coming:
-                $query = $query->where('due', '>=',Carbon::now()->toDateTimeString());
-                
-            break;
+        $tasks=$tasks->paginate(10);
         
-            case Task::Overdue:
-                $query = $query->where('due', '<', Carbon::now()->toDateTimeString());
-                $query = $query->where('completed', false);
-                
-            break;
-        
-            case Task::Finished:
-                $query = $query->where('completed',true);
-            break;
-        }
-        $tasks=$query->paginate(10);
-        $priorities= Priority::get();//pluck('name', 'id');
-        $request->flash();
-        
-        return view('tasks.generic_seach', compact('priorities', 'users', 'tasks'))
-                                        ->with('route','tasks.list_filtered')
-                                        ->with('param',$filter)
-                                        ->with('tags',null)
-                                        ->with('title',$filter)
-                                        ->with('search_tags',false)
-                                        ->with('rows_style','ul');
-        //return view('tasks.list_filtered', compact('tasks', 'users', 'priorities'));
-    }
-    
-    public function search(Request $request)
-    {
-        return $this->search_generic($request, 'tasks.search', 'tasks.search', false);
-    }
-    
-    public function search_generic(Request $request, $view, $route, $ignore_completed)
-    {
-        $tasks = Task::select('*');
-        
-        $user_id = $this->get_user_id($request['user_id']);
-        if($user_id>0)
-        {
-            $tasks=$tasks->where('user_id',$user_id);
-        }
-            
-        if($ignore_completed==true)
-        {
-            $tasks=$tasks->where('completed',false);
-        }
-                
-        if($request['priority_id'])
-        {
-            Log::info("priority_id",$request['priority_id']);
-            $tasks=$tasks->whereIn('priority_id', $request['priority_id']);
-        }
-        $tasks=$tasks->paginate(10); //show only 5 items at a time in descending order
+        /////////////////////////////////////////////////
         
         $users= $this->get_users_for_select();
-
-        $request->flash();
-
-        $priorities= Priority::get();//pluck('name', 'id');
+        $priorities= Priority::get();
         
-        return view('tasks.generic_seach', compact('priorities', 'users', 'tasks'))
-                                        ->with('route',$route)
-                                        ->with('param',null)
-                                        ->with('tags',null)
-                                        ->with('title','Manage Tasks')
-                                        ->with('search_tags',false)
-                                        ->with('rows_style','table');
-        //return view($view, compact('route', 'tasks', 'users','priorities'));
+        $request->flash();
+        return view('tasks.seach', compact('priorities', 'users', 'tasks', 'filter', 'tags', 'search_tags', 'rows_style'));
     }
+    
+    
 
     public function create()
     {
@@ -289,8 +162,7 @@ class TaskController extends Controller
         }        
         return $users;
     }
-    
-    private function get_user_id($user_id)
+    private static function get_user_id($user_id)
     {
         if(!Auth::user()->is_admin()==true) 
         {
@@ -300,6 +172,5 @@ class TaskController extends Controller
         {
             return $user_id;
         }
-    }
-                
+    }    
 }

@@ -6,14 +6,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use App\Enum\TaskFilter;
 
 class Task extends Model
 {
-    const Active='Active';
-    const Today='Today';
-    const Coming='Coming';
-    const Overdue='Overdue';
-    const Finished='Finished';
 
     public function user()
     {
@@ -195,4 +191,66 @@ class Task extends Model
         }
         return $result;
     }  
+
+    public static function Search($request, $user_id, $filter)
+    {
+        $tasks = Task::select("*");
+
+        if($user_id>0)
+        {
+            $task=$tasks->where('user_id',$user_id);
+        }
+        if($request['priority_id'])
+        {
+            $tasks=$tasks->whereIn('priority_id', $request['priority_id']);
+        }
+        $tag_search = $request['tag_search'];
+        if($tag_search)
+        {
+            $keywords = explode(" ", $tag_search);
+            Log::info('$keywords', $keywords);
+            if(count($keywords)>0)
+            {
+                $result = $tasks->where(function($query) use($keywords)
+                {
+                        foreach($keywords as $keyword)
+                        {
+                            $query->orWhere('description', 'LIKE', "%$keyword%");
+                        }
+                });
+            }
+        }
+        return self::add_filter($tasks, $filter);
+        
+    }
+    
+    public static function add_filter($query, $filter)
+    {
+        switch($filter)
+        {
+            case TaskFilter::Today:
+                $query = $query->whereDate('due', '=',Carbon::today()->toDateString());
+            break;
+            case TaskFilter::Active:
+                $query = $query->where('completed', false);
+            break;
+        
+            case TaskFilter::Coming:
+                $query = $query->where('due', '>=',Carbon::now()->toDateTimeString());
+                
+            break;
+        
+            case TaskFilter::Overdue:
+                $query = $query->where('due', '<', Carbon::now()->toDateTimeString());
+                $query = $query->where('completed', false);
+                
+            break;
+        
+            case TaskFilter::Finished:
+                $query = $query->where('completed', true);
+            break;
+        }
+        return $query;
+    }
+
 }
