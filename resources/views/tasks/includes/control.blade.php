@@ -8,7 +8,7 @@
                 {{ Form::hidden('user_id', Auth::user()->id) }}        
             @endif            
         </td>            
-        <td >{{ Form::text('tag_search', null, array('class' => 'form-control', 'placeholder'=>'Search Tags') ) }}        </td>
+        <td >{{ Form::text('tag_search', null, array('class' => 'form-control', 'placeholder'=>'Search Keywords') ) }}        </td>
         
         <td class="w3-center">Priority:
             @foreach($priorities as $priority)

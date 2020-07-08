@@ -76,7 +76,7 @@ foreach(\App\Priority::get() as $priority)
 </div>
 
 <div class="form-group">
-        <label for="description"><i class="fa fa-tags" aria-hidden="true">Tags</i></label>
+        <label for="description"><i class="fa fa-tags" aria-hidden="true">Keywords</i></label>
         {{ Form::text('description', $task->description, array('class' => 'form-control')) }}
 </div>
     
