@@ -13,7 +13,8 @@
 
 <div class="w3-padding w3-panel">
     
-@include('tasks.includes.bytagscontrol')
+@include('tasks.includes.control', ['search_tags'=>true])
+@include('tasks.includes.results_ul', ['tasks'=>$tasks])
 
 <div class="w3-row">
 <ul class="w3-ul w3-border-0" style="border: none">

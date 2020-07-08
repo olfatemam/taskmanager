@@ -21,12 +21,17 @@ class TaskController extends Controller
     public function tags(Request $request) 
     {
         $users= $this->get_users_for_select();
-        
-        $tags = Task::get_tags_and_frequencies($request['user_id']);
+        $user_id = $this->get_user_id($request['user_id']);
+        $tags = Task::get_tags_and_frequencies($user_id);
         
         $tasks=Task::select("*");
         
-        if($request['user_id']>0)$tasks = $tasks->where('user_id',$user_id);
+        
+        if($user_id>0)
+        {
+            $tasks=$tasks->where('user_id',$user_id);
+        }
+        
         
         if($request['priority_id'])
         {
@@ -53,7 +58,15 @@ class TaskController extends Controller
         $tasks=$tasks->paginate(10);
         $priorities= Priority::get();//pluck('name', 'id');
         $request->flash();
-        return view('tasks.tags', compact('priorities', 'users', 'tags', 'tasks'));
+        
+                
+        return view('tasks.generic_seach', compact('priorities', 'users', 'tasks'))
+                                        ->with('route','tasks.tags')
+                                        ->with('param',null)
+                                        ->with('tags',$tags)
+                                        ->with('title','Search Tags')
+                                        ->with('search_tags',true)
+                                        ->with('rows_style','ul');
     }
     
     public function index() 
@@ -71,11 +84,12 @@ class TaskController extends Controller
 
         $query = Task::select("*");
 
-        if($request['user_id'])
+        $user_id = $this->get_user_id($request['user_id']);
+        if($user_id>0)
         {
-            $tasks = $query->where('user_id',$request['user_id']);
+            $query=$query->where('user_id',$user_id);
         }
-        
+                
 
         if($request['priority_id'])
         {
@@ -111,7 +125,14 @@ class TaskController extends Controller
         $priorities= Priority::get();//pluck('name', 'id');
         $request->flash();
         
-        return view('tasks.list_filtered', compact('tasks', 'users', 'priorities','filter'));
+        return view('tasks.generic_seach', compact('priorities', 'users', 'tasks'))
+                                        ->with('route','tasks.list_filtered')
+                                        ->with('param',$filter)
+                                        ->with('tags',null)
+                                        ->with('title',$filter)
+                                        ->with('search_tags',false)
+                                        ->with('rows_style','ul');
+        //return view('tasks.list_filtered', compact('tasks', 'users', 'priorities'));
     }
     
     public function search(Request $request)
@@ -121,11 +142,12 @@ class TaskController extends Controller
     
     public function search_generic(Request $request, $view, $route, $ignore_completed)
     {
-        $tasks = Task::orderby('due', 'asc');
+        $tasks = Task::select('*');
         
-        if($request['user_id'])
+        $user_id = $this->get_user_id($request['user_id']);
+        if($user_id>0)
         {
-            $tasks=$tasks->where('user_id',$request['user_id']);
+            $tasks=$tasks->where('user_id',$user_id);
         }
             
         if($ignore_completed==true)
@@ -146,7 +168,14 @@ class TaskController extends Controller
 
         $priorities= Priority::get();//pluck('name', 'id');
         
-        return view($view, compact('route', 'tasks', 'users','priorities'));
+        return view('tasks.generic_seach', compact('priorities', 'users', 'tasks'))
+                                        ->with('route',$route)
+                                        ->with('param',null)
+                                        ->with('tags',null)
+                                        ->with('title','Manage Tasks')
+                                        ->with('search_tags',false)
+                                        ->with('rows_style','table');
+        //return view($view, compact('route', 'tasks', 'users','priorities'));
     }
 
     public function create()
@@ -260,5 +289,17 @@ class TaskController extends Controller
         }        
         return $users;
     }
-        
+    
+    private function get_user_id($user_id)
+    {
+        if(!Auth::user()->is_admin()==true) 
+        {
+            return Auth::user()->id;
+        }
+        else
+        {
+            return $user_id;
+        }
+    }
+                
 }
