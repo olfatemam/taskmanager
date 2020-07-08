@@ -136,7 +136,8 @@ function create_tooltip(event)
     jsn_tasks = {!! json_encode($tasks); !!};
     
     jsn_tasks.forEach(function (task) {
-        task.start = task.due;//moment.utc(task.due);
+        task.start = moment(task.due, 'UTC');
+        task.start = task.due;//, 'UTC');
     });
         
     var calendar = new FullCalendar.Calendar(calendarEl, 

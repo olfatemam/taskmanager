@@ -19,19 +19,19 @@ function myAccFunc() {
 </script>
 
 
-<div class="w3-sidebar w3-light-grey w3-card" style="width:10%">
-
-<a href="{{route('tasks.calendar')}}" class="w3-bar-item w3-button"><i class="fas fa-calendar-check">Calendar</i></a>
-<a href="{{route('tasks.search', \App\Enum\TaskFilter::Active)}}" class="w3-bar-item w3-button"><i class="fas fa-tasks">Active</i></a>
-<a href="{{route('tasks.search', \App\Enum\TaskFilter::Today)}}" class="w3-bar-item w3-button"><i class="fas fa-calendar-day"> Today</i></a>
-<a href="{{route('tasks.search', \App\Enum\TaskFilter::Coming)}}" class="w3-bar-item w3-button"><i class="fas fa-calendar-plus"> Coming</i></a>
-<a href="{{route('tasks.search', \App\Enum\TaskFilter::Overdue)}}" class="w3-bar-item w3-button"><i class="fas fa-calendar-times"> Overdue</i></a>
-<a href="{{route('tasks.search', \App\Enum\TaskFilter::Finished )}}" class="w3-bar-item w3-button"><i class="fas fa-calendar-check"> Finished</i></a>
-<a href="{{route ( 'tasks.search', \App\Enum\TaskFilter::Tags ) }}" class="w3-bar-item w3-button"><i class="fa fa-tags" aria-hidden="true">Search Tags</i> </a>
-<a href="{{ route('tasks.search', \App\Enum\TaskFilter::Search) }}" class="w3-bar-item w3-button"><i class="fa fa-tasks" aria-hidden="true"> Control</i></a>
-
+<div class="w3-sidebar w3-light-grey w3-card" style="width:15%">
+<ul class='w3-ul'>
+<li><a href="{{route('tasks.calendar')}}" ><i class="fas fa-calendar-check">Calendar</i></a>
+</li><li><a href="{{route('tasks.search', \App\Enum\TaskFilter::Active)}}"><i class="fas fa-tasks">Active</i></a>
+</li><li><a href="{{route('tasks.search', \App\Enum\TaskFilter::Today)}}"><i class="fas fa-calendar-day"> Today</i></a>
+</li><li><a href="{{route('tasks.search', \App\Enum\TaskFilter::Coming)}}"><i class="fas fa-calendar-plus"> Coming</i></a>
+</li><li><a href="{{route('tasks.search', \App\Enum\TaskFilter::Overdue)}}"><i class="fas fa-calendar-times"> Overdue</i></a>
+</li><li><a href="{{route('tasks.search', \App\Enum\TaskFilter::Finished )}}"><i class="fas fa-calendar-check"> Finished</i></a>
+</li><li><a href="{{ route('tasks.search', \App\Enum\TaskFilter::Search) }}"><i class="fa fa-tasks" aria-hidden="true"> Control</i></a>
+</li>
+</ul>
 <button class="w3-button w3-block w3-left-align" onclick="myAccFunc()">
-    Keys <i class="fa fa-caret-down"></i>
+    Keywords <i class="fa fa-caret-down"></i>
 </button>
 <div id="demoAcc" class="w3-hide w3-white w3-card">
 @foreach(\App\Task::get_tags_and_frequencies() as $key)

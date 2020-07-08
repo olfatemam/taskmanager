@@ -61,12 +61,7 @@ foreach(\App\Priority::get() as $priority)
         </div>
     </div>
 </div>
-<div class="col-md-6" >
-    <div class="form-group">
-        {{ Form::label('timezone', 'Time Zone', array('class'=>'')) }}
-        {{ Form::text('timezone', $task->timezone, array('readonly', 'class' => 'form-control')) }}
-    </div>
-</div>
+
 </div>
 <div class="row" style="width:100%">        
 <div class="col-md-12" >    
@@ -141,9 +136,8 @@ $(document).ready(function(){
     $("#timezone").val(tz);
     $("#timezone_text").text(tz);
     
- //moment.utc("2013-11-18 11:55").tz("Asia/Taipei");
- 
-    var due = moment.utc("{{$task->due}}").tz({{$task->timezone}});
+    //var due = moment("{{$task->due}}", "UTC");
+    var due = "{{$task->due}}";
     
     $('#datetimepicker1').datetimepicker({
         date: due,
