@@ -85,6 +85,62 @@ foreach(\App\Priority::get() as $priority)
 
 <script>
 
+ $.ajaxSetup({
+
+        headers: {
+
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
+        }
+
+    });
+    
+var calendar=null;
+
+
+function on_dateClick(date, jsEvent, view)
+{
+    
+    var tz = moment.tz.guess();
+    cdate = moment(date.date);
+    var prompt_title = prompt('Enter task details', 'name:keywords');
+    
+    if(prompt_title && prompt_title.length>0)
+    {
+        var data_array= prompt_title.split(":");
+        var name = (data_array.length>=1)?data_array[0]:"";
+        var keywords = (data_array.length>=2)?data_array[1]:"";
+        if( name.length > 0 )
+        {
+                $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    url:"{{ route('test') }}",
+                    data:{
+                            name: name,
+                            keywords: keywords,
+                            due: cdate.format(),
+                            timezone:tz,
+                        },
+                    success:function(data)
+                    {
+                        if(data.success)
+                        {
+                            var ret = g_calendar.addEvent({title: name,start: cdate.format(),allDay: true}, true);
+                            g_calendar.render();
+                            //alert('success');
+                        }
+                        else if(data.error)
+                        {
+                            alert('Error: ' + data.error);
+                        }
+                        
+                    }
+            });
+        }
+    }
+}
+
 function get_staus_title(event)
 {
     
@@ -140,7 +196,7 @@ function create_tooltip(event)
         task.start = task.due;//, 'UTC');
     });
         
-    var calendar = new FullCalendar.Calendar(calendarEl, 
+    g_calendar = new FullCalendar.Calendar(calendarEl, 
     {
     headerToolbar: {
         left: 'prev,next today',
@@ -158,13 +214,12 @@ function create_tooltip(event)
         
         dateClick: function(date, jsEvent, view)
         {
-            //$('.dayClickWindow').show();
+            on_dateClick(date, jsEvent, view);
         },
+          
         eventClick:function(event)
         {
             task=event.event;
-            //console.log(task);
-            //alert(task.name);
             task_edit = "{{route('tasks.edit', -1)}}";
             if (task.id) {
                 url = task_edit.replace("-1", task.id);
@@ -216,7 +271,7 @@ function create_tooltip(event)
 //        }        
     });
 
-    calendar.render();
+    g_calendar.render();
   });
   
 

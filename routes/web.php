@@ -43,5 +43,12 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('tasks.calendar', 'TaskController@calendar')->name('tasks.calendar');
 
     Route::get('tasks.complete/{id}', 'TaskController@complete')->name('tasks.complete');
+
     
+    //Route::post('tasks.add_from_cal', 'TaskController@add_from_cal')->name('tasks.add_from_cal');
+
+    //Route::post('tasks.add_from_cal','TaskController@add_from_cal')->name('tasks.add_from_cal');
+        Route::post('/test',[
+    'uses' => 'TaskController@test'
+])->name('test');          
 });    

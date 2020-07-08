@@ -179,4 +179,31 @@ class TaskController extends Controller
             return $user_id;
         }
     }    
+    
+    public function test(Request $request)
+    {
+        try
+        {
+            $data = $request->all();
+            Log::info('date='. $data['due']);
+            
+            $task = new Task();
+            $task->user_id=Auth::user()->id;
+            $task->name=$data['name'];
+            $task->due= (new \DateTime($data['due']))->format('Y-m-d H:i:s');
+
+            $task->description=$data['keywords'];
+            $task->timezone=$data['timezone'];
+            $task->priority_id=Priority::getNormalId();
+            $task->status_id=Status::getNew()->id;
+            $task->reminder=true;
+            $task->save();
+            return response()->json(['success'=>'added']);;
+        }
+        catch(\PDOException $e)
+        {
+            return response()->json(['error'=> \App\Helpers\DBError::get_readable_sql_error($e)]);;
+        }
+    }    
+ 
 }

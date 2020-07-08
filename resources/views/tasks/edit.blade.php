@@ -29,10 +29,7 @@ foreach(\App\Priority::get() as $priority)
     
 <div class="panel panel-default">
 <div class="panel-heading"><h5>Edit Task
-<a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a>
-            <span name='timezone_text' id='timezone_text' class ='btn btn-info float-right' >UTC</span>
-    </h5>
-        {{ Form::text('timezone', 'UTC', array('readonly', 'class' => 'w3-btn float-right')) }}
+<a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a><span name='timezone_text' id='timezone_text' class ='btn btn-info float-right' >UTC</span></h5>
 <div class='clearfix'></div>
 </div>
 <div class="panel-body w3-padding w3-border" style="margin-top: 20px">

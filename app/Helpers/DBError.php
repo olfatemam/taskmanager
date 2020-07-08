@@ -7,11 +7,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\UrlGenerator;
 
 class DBError {
-    //put your code here
 
-    public static function report($e)
+    public static function get_readable_sql_error($e)
     {
-        
         $message="";
         if($e instanceof \PDOException)
         {
@@ -19,10 +17,15 @@ class DBError {
             $my_array  = preg_split("/:/", $message);
         
             //log::info($my_array[2]);
-            $message = str_replace ("(SQL", "",  $my_array[2]);
+            if($e->getCode()==23000)return "Duplicate Task Name";
+            $message = str_replace ("(SQL", "",  $my_array[2]) . $e->getCode();
         }
-        return redirect()->to(app(UrlGenerator::class)->previous())->withErrors(array('message' => $message));
-        
+        return $message;
     }
-    
+
+    public static function report($e)
+    {
+        $message = self::get_readable_sql_error($e);
+        return redirect()->to(app(UrlGenerator::class)->previous())->withErrors(array('message' => $message));
+    }
 }

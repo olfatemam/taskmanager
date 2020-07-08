@@ -204,7 +204,7 @@ class Task extends Model
 
     public static function Search($request, $user_id, $filter)
     {
-        $tasks = Task::select("*");
+        $tasks = Task::orderby('due', 'desc');
 
         if($user_id>0)
         {
@@ -230,6 +230,7 @@ class Task extends Model
                 });
             }
         }
+        
         return self::add_filter($tasks, $filter);
         
     }
