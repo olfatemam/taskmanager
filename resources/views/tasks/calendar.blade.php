@@ -77,30 +77,39 @@ foreach(\App\Priority::get() as $priority)
 @section('content_scripts')
 <script type="text/javascript" src="{{asset('libs/moment/moment.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('libs/moment/moment-timezone-with-data.js')}}"></script>
+<!--
 <script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
 <script src='https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js'></script>
+
+-->
 
 <script src="{{ asset('libs/fullcalendar-5.1.0/lib/main.js') }}" ></script>
 
 
 <script>
-
  $.ajaxSetup({
 
         headers: {
 
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-
         }
-
     });
     
 var calendar=null;
 
-
+function on_event_click()
+{
+    task=event.event;
+    task_edit = "{{route('tasks.edit', -1)}}";
+    if (task.id) {
+        url = task_edit.replace("-1", task.id);
+        window.open(url);
+        return false;
+    }
+}
+            
 function on_dateClick(date, jsEvent, view)
 {
-    
     var tz = moment.tz.guess();
     cdate = moment(date.date);
     var prompt_title = prompt('Enter task details', 'name:keywords');
@@ -143,7 +152,6 @@ function on_dateClick(date, jsEvent, view)
 
 function get_staus_title(event)
 {
-    
     overdue="";
     if(event.extendedProps.completed==true)
     {
@@ -185,17 +193,29 @@ function create_tooltip(event)
         '</div>';
     return tooltip;
 }
+function init_tooltip(info)
+{
+    var tooltip = create_tooltip(info.event);//.description;
+    $(info.el).tooltip({
+                            title: tooltip,
+                            container: 'body',
+                            html:true,
+                            placement:"left",
+                            template:'<div class="tooltip"  role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner w3-card" style="margin:0;padding:0;"></div></div>',
+                            delay: { "show": 500, "hide": 300 }
+                        });
+}
     
-  document.addEventListener('DOMContentLoaded', function() 
-  {
+document.addEventListener('DOMContentLoaded', function() 
+{
     var calendarEl = document.getElementById('calendar');
     jsn_tasks = {!! json_encode($tasks); !!};
-    
+
     jsn_tasks.forEach(function (task) {
         task.start = moment(task.due, 'UTC');
         task.start = task.due;//, 'UTC');
     });
-        
+    
     g_calendar = new FullCalendar.Calendar(calendarEl, 
     {
     headerToolbar: {
@@ -203,76 +223,31 @@ function create_tooltip(event)
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
     },
-    
-    //initialDate: '2020-06-12',
-    navLinks: true, // can click day/week names to navigate views
-    businessHours: true, // display business hours
-    editable: true,
-    selectable: true,
+        navLinks: true, // can click day/week names to navigate views
+        businessHours: true, // display business hours
+        editable: true,
+        selectable: true,
 
-    "events": jsn_tasks,
-        
+        "events": jsn_tasks,
+
         dateClick: function(date, jsEvent, view)
         {
             on_dateClick(date, jsEvent, view);
         },
-          
+
         eventClick:function(event)
         {
-            task=event.event;
-            task_edit = "{{route('tasks.edit', -1)}}";
-            if (task.id) {
-                url = task_edit.replace("-1", task.id);
-                window.open(url);
-                return false;
-            }
-        },
-        eventDidMount: function (info) {
-            //console.log(info.event.extendedProps);
-            var tooltip = create_tooltip(info.event);//.description;
-            //$(info.el).attr("data-original-title", tooltip)
-            //$(info.el).tooltip({ container: "body"})
-            $(info.el).tooltip({title: tooltip,
-                  container: 'body',
-                  html:true,
-                  placement:"left",
-                  template:'<div class="tooltip"  role="tooltip">\n\
-                <div class="tooltip-arrow"></div><div class="tooltip-inner w3-card" \n\
-                        style="margin:0;padding:0;"></div></div>',
-                  delay: { "show": 500, "hide": 300 }
-            });
-           },
-//        
-//      eventDidMount: function(info) 
-//      {
-//            var tooltip = info.event.description;
-//            $(element).attr("data-original-title", tooltip)
-//            $(element).tooltip({ container: "body"});
-//            ////        var tooltip = new Tooltip(info.el, {
-////                    title: info.event.extendedProps.description,
-////                    placement: 'top',
-////                    trigger: 'hover',
-////                    container: 'body'
-////                  });
-//      
-//      },
+            on_event_click(event);
 
-//        eventRender: function(info)
-//        {
-//            $(info.el).tooltip
-//            ({
-//                        title: info.event.extendedProps.tooltip,
-//                        container: 'body',
-//                        html:true,
-//                        placement:"left",
-//                        template:'<div class="tooltip"  role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="margin:0;padding:0;"></div></div>',
-//                        delay: { "show": 500, "hide": 300 }
-//            });
-//        }        
-    });
+        },
+        eventDidMount: function (info)
+        {
+            init_tooltip(info);
+        },
+});
 
     g_calendar.render();
-  });
+});
   
 
 </script>
