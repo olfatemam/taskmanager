@@ -180,7 +180,7 @@ class TaskController extends Controller
         }
     }    
     
-    public function test(Request $request)
+    public function store_from_calendar(Request $request)
     {
         try
         {
@@ -198,7 +198,7 @@ class TaskController extends Controller
             $task->status_id=Status::getNew()->id;
             $task->reminder=true;
             $task->save();
-            return response()->json(['success'=>'added']);;
+            return response()->json(['success'=>$task->id]);
         }
         catch(\PDOException $e)
         {

@@ -115,7 +115,7 @@ function on_dateClick(date, jsEvent, view)
                 $.ajax({
                     type: 'POST',
                     dataType: "json",
-                    url:"{{ route('test') }}",
+                    url:"{{ route('tasks.store_from_calendar') }}",
                     data:{
                             name: name,
                             keywords: keywords,
@@ -126,7 +126,7 @@ function on_dateClick(date, jsEvent, view)
                     {
                         if(data.success)
                         {
-                            var ret = g_calendar.addEvent({title: name,start: cdate.format(),allDay: true}, true);
+                            var ret = g_calendar.addEvent({id: data.success, priorit: 'Normal',title: name,start: cdate.format(),allDay: false}, true);
                             g_calendar.render();
                             //alert('success');
                         }
@@ -204,7 +204,7 @@ function create_tooltip(event)
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
     },
     
-    initialDate: '2020-06-12',
+    //initialDate: '2020-06-12',
     navLinks: true, // can click day/week names to navigate views
     businessHours: true, // display business hours
     editable: true,
