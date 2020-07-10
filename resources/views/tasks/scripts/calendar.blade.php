@@ -21,6 +21,7 @@ function on_dateClick(date, jsEvent, view)
     
     document.getElementById("due").value = cdate.format('YYYY-MM-DD HH:mm:ss');
     document.getElementById("timezone").value = moment.tz.guess();
+    $("#datetimezone").text ( cdate.format('ddd, D MMM h:m A ')+ " "+moment.tz.guess() );
     console.log('sent due is: '+cdate.format('YYYY-MM-DD HH:mm:ss'));
     console.log('sent timezone is: '+moment.tz.guess());
     $('#mymodal').modal();

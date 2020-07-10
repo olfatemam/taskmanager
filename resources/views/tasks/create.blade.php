@@ -25,7 +25,7 @@ foreach(\App\Priority::get() as $priority)
 
     
 <div class="panel panel-default">
-<div class="panel-heading"><h5>Create New Task
+    <div class="panel-heading"><h5>Create New Task
         <a href="{{ url()->previous() }}" class="btn btn-primary float-right" >Back</a>
         <span name='timezone_text' id='timezone_text' class ='btn btn-info float-right' >UTC</span></h5>
 <div class='clearfix'>
