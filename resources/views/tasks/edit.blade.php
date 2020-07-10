@@ -134,7 +134,8 @@ $(document).ready(function(){
     $("#timezone_text").text(tz);
     
     //var due = moment("{{$task->due}}", "UTC");
-    var due = moment("{{$task->due}}");
+    
+    var due = moment.utc("{{$task->due}}").tz("{{$task->timezone}}").format();
     
     $('#datetimepicker1').datetimepicker({
         date: due,
