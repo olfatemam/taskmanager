@@ -22,7 +22,7 @@ foreach(\App\Priority::get() as $priority)
 
 
 {{ Form::model(null, array('route' => array('tasks.update', $task), 'method' => 'PUT')) }}
-{{ Form::hidden('timezone', "UTC", array('id'=>'timezome') ) }}
+{{ Form::hidden('timezone', "UTC", array('id'=>'timezone') ) }}
 
 <div class="container">
 

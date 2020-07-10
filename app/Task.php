@@ -36,10 +36,13 @@ class Task extends Model
         $this->description  =   $request['description'];
         
 //store in utc
-        
+        Log::info('$request[timezone]='.$request['timezone']);
         $tzone =  new \DateTimeZone($request['timezone']); 
+        
         $utczone =  new \DateTimeZone("UTC"); 
+        
         $date =  new \DateTime($request['due'], $tzone); 
+        
         $date->setTimezone($utczone);
         
         $this->due          =   $date->format('Y-m-d H:i:s');

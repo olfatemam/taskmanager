@@ -19,7 +19,7 @@ foreach(\App\Priority::get() as $priority)
 
 {{ Form::open(array('route' => 'tasks.store', 'method' => 'post')) }}
 
-{{ Form::hidden('timezone', "UTC", array('id'=>'timezome') ) }}
+{{ Form::hidden('timezone', "UTC", array('id'=>'timezone') ) }}
 
 <div class="container">
 

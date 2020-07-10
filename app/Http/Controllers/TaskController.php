@@ -62,6 +62,7 @@ class TaskController extends Controller
     {
         $request->validate([
                     'name'=>'required|max:100',
+                    'timezone'=>'required|max:100',
                     //'description'=>'required|max:100',
                     'priority_id'=>'required',
                     'due'=>'required',

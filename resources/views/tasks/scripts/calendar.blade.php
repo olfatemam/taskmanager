@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function()
     jsn_tasks = {!! json_encode($tasks); !!};
 
     jsn_tasks.forEach(function (task) {
-        //task.due = moment.utc(task.due).format();
+        task.due = moment.utc(task.due).format();
         task.start=task.due;
     });
     
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function()
         selectable: true,
 
         "events": jsn_tasks,
-
+        
         dateClick: function(date, jsEvent, view)
         {
             on_dateClick(date, jsEvent, view);
