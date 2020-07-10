@@ -89,7 +89,7 @@ class Task extends Model
     public static function get_calendar_user_tasks()
     {
         $query = 'select '
-                . ' tasks.id as task_id, '
+                //. ' tasks.id as task_id, '
                 . ' tasks.name as title, '
                 . ' tasks.id as id, '
                 . ' tasks.due as due, '

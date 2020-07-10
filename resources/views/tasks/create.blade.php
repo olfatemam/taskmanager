@@ -1,4 +1,20 @@
 @extends('layouts.app')
+@section('content_styles')
+<style>
+<?php
+foreach(\App\Priority::get() as $priority)
+{
+    echo PHP_EOL .'.' . $priority->name .
+            '{'. 
+            'background-color: '. $priority->background_color .';'.
+            'color: '. $priority->text_color .';'.
+            '}' ;
+}
+?>
+    
+</style>
+@endsection
+
 @section('content')
 
 {{ Form::open(array('route' => 'tasks.store', 'method' => 'post')) }}

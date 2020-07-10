@@ -1,25 +1,4 @@
 @extends('layouts.app')
-
-@section('content')
-
-<div class="container">
-<div class="panel panel-default">
-<div class="panel-body" >
-<div id='calendar'></div>
-
-<div class="dayClickWindow">
-
-</div>
-
-<div class="eventClickWindow">
-</div>
-
-</div>
-</div>
-</div>
-@endsection
-
-
 @section('content_styles')
 
 
@@ -72,32 +51,121 @@ foreach(\App\Priority::get() as $priority)
 
 </style>
 
+
+@section('content')
+
+<div class="container">
+<div class="panel panel-default">
+<div class="panel-body" >
+<div id='calendar'></div>
+
+@include ('tasks.includes.calendar_modal')
+
+</div>
+</div>
+</div>
 @endsection
 
+
+@endsection
+
+
 @section('content_scripts')
+
 <script type="text/javascript" src="{{asset('libs/moment/moment.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('libs/moment/moment-timezone-with-data.js')}}"></script>
-<!--
-<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
-<script src='https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js'></script>
 
--->
 
 <script src="{{ asset('libs/fullcalendar-5.1.0/lib/main.js') }}" ></script>
 
 
 <script>
- $.ajaxSetup({
+    
+    $.ajaxSetup({
 
         headers: {
 
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+
+
+function on_dateClick(date, jsEvent, view)
+{
+    cdate = moment(date.date).local();
     
+    document.getElementById("due").value = cdate.format('YYYY-MM-DD HH:mm:ss');
+    document.getElementById("timezone").value = moment.tz.guess();
+    $('#mymodal').modal();
+}
+
+$(function()
+{
+    $('#newtask-form-submit').on('click', function(e)
+    {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url:"{{ route('tasks.store_from_calendar') }}",
+            data: $('form.tagForm').serialize(),
+            success: function(response)
+            {
+                if(response.success)
+                {
+                    task = response.success;
+                    task.title=task.name;
+                    task.due = moment.utc(task.due);
+                    task.start=task.due;
+                    task.end=task.due;
+                    task.end.add(30, 'minutes');
+                    //task.color=task.priority.background_color;
+                    task.priority=task.priority_name;
+                    task.status=task.status_name;
+                    //task.user_name=task.user.name;
+                    task.user=task.user_name;
+                    //task.allDay=true;
+                    
+                    console.log(task);    
+                    
+                    
+                    var ret = g_calendar.addEvent(
+                        {
+                            id: task.id,
+                            title: task.title,
+                            start: task.due.format(),
+                            end:    task.end.format(),
+                            priority: task.priority,
+                            status: task.status,
+                            user_name: task.user_name,
+                            color: task.color,
+                            completed: task.completed,
+                            description: task.description,
+                            timezone: task.timezone,
+                            user_id: task.user_id
+                        }
+                        );
+                        g_calendar.render();
+                }
+                else if(response.error)
+                {
+                    alert('Error: ' + response.error);
+                }
+            },
+            error: function(response) {
+                alert(response);
+            }
+        });
+        $("#mymodal").modal("toggle");
+        return false;
+    });
+});
+
+
+        
 var calendar=null;
 
-function on_event_click()
+function on_event_click(event)
 {
     task=event.event;
     task_edit = "{{route('tasks.edit', -1)}}";
@@ -105,49 +173,7 @@ function on_event_click()
         url = task_edit.replace("-1", task.id);
         window.open(url);
         return false;
-    }
-}
-            
-function on_dateClick(date, jsEvent, view)
-{
-    var tz = moment.tz.guess();
-    cdate = moment(date.date);
-    var prompt_title = prompt('Enter task details', 'name:keywords');
-    
-    if(prompt_title && prompt_title.length>0)
-    {
-        var data_array= prompt_title.split(":");
-        var name = (data_array.length>=1)?data_array[0]:"";
-        var keywords = (data_array.length>=2)?data_array[1]:"";
-        if( name.length > 0 )
-        {
-                $.ajax({
-                    type: 'POST',
-                    dataType: "json",
-                    url:"{{ route('tasks.store_from_calendar') }}",
-                    data:{
-                            name: name,
-                            keywords: keywords,
-                            due: cdate.format(),
-                            timezone:tz,
-                        },
-                    success:function(data)
-                    {
-                        if(data.success)
-                        {
-                            var ret = g_calendar.addEvent({id: data.success, priorit: 'Normal',title: name,start: cdate.format(),allDay: false}, true);
-                            g_calendar.render();
-                            //alert('success');
-                        }
-                        else if(data.error)
-                        {
-                            alert('Error: ' + data.error);
-                        }
-                        
-                    }
-            });
-        }
-    }
+   }
 }
 
 function get_staus_title(event)
