@@ -2,7 +2,7 @@
     <div class="modal-dialog w3-small">
     <div class="modal-content">
         <div class="modal-header" style='width: 100%'>
-            <div class="modal-title pull-left" id="myModalLabel">Add New Tag</div>
+            <div class="modal-title pull-left" id="myModalLabel">Add New Task</div>
             <button type="button" class="w3-red close pull-right" data-dismiss="modal" aria-hidden="true">&times;</button>
             
         </div>
@@ -11,7 +11,7 @@
                 {{ Form::hidden('timezone', "", array('id'=>'timezone') ) }}
                 {{ Form::hidden('due', "", array('id'=>'due') ) }}
                 {{ Form::hidden('completed', false, array('id'=>'due') ) }}
-                <table class='w3-small' >
+                <table class='w3-small' style='width: 100%'>
                     <tr><td>{{ Form::text('name', null, array('required', 'class' => 'w3-input w3-border', 'placeholder'=>'task description')) }}</td></tr>
                     <tr><td>{{ Form::text('description', null, array('class' => 'w3-input w3-border', 'placeholder'=>'keywords')) }}</td></tr>
                     <tr><td class="d-flex justify-content-center">
