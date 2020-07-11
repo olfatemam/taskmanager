@@ -106,7 +106,7 @@ class TaskController extends Controller
         //$task->completion_time=now();//olfat: add completion time
         $task->save(); 
         
-        return redirect()->route('tasks.list', $task->id)->with('flash_message', 'Task, '. $task->name.' completed.');
+        return redirect()->route('tasks.search',TaskFilter::Search)->with('flash_message', 'Task, '. $task->name.' completed.');
         
     }
 
