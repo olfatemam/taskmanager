@@ -185,21 +185,37 @@ class TaskController extends Controller
     {
         try
         {
-            $task = new Task();
+            $isnew=false;
             $data = $request->all();
-
+            if($data['task_id']>0)
+            {
+                $task = Task::findOrFail($data['task_id']);
+            }
+            else
+            {
+                $task = new Task();
+                $isnew=true;
+            }
+            if(!isset($data['completed']))$data['completed']=false;
+            if(!isset($data['reminder']))$data['reminder']=false;
+            
+            Log::info('data=',$data);
+            
             $task->read_input($data);
-            $task->user_id=Auth::user()->id;
+            
+            if($isnew==true)//olfat:TBD: admin currently can edit all events this need to change
+                $task->user_id=Auth::user()->id;
             
             $task->save();
+            
             $task->task_id=$task->id;
+            $task->is_new=$isnew;
             
             $task->color=$task->priority->background_color;
             $task->priority_name=$task->priority->name;
             $task->status_name=$task->status->name;
-//          $task->title=$task->name;
+            $task->title=$task->name;
             $task->user_name=$task->user->name;
-            
             
             return response()->json(['success'=>$task]);
         }

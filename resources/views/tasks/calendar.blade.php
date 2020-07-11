@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content_styles')
 
-
 <link href="{{ asset('libs/fullcalendar-5.1.0/lib/main.css') }}" rel='stylesheet' />
 
 <style>

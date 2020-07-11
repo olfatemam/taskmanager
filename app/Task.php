@@ -97,6 +97,7 @@ class Task extends Model
                 . ' tasks.id as id, '
                 . ' tasks.due as due, '
                 . ' tasks.completed as completed, '
+                . ' tasks.reminder as reminder, '
                 . ' tasks.description as description, '
                 . ' tasks.timezone as timezone, '
                 . ' priorities.name as priority, '

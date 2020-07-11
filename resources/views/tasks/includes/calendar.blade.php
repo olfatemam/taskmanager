@@ -26,14 +26,31 @@ foreach(\App\Priority::get() as $priority)
             <div class="modal-body">
                 {{ Form::hidden('timezone', "", array('id'=>'timezone') ) }}
                 {{ Form::hidden('due', "", array('id'=>'due') ) }}
-                {{ Form::hidden('completed', false, array('id'=>'due') ) }}
+                {{ Form::hidden('task_id', 0, array('id'=>'task_id') ) }}
                 
                 <table class='w3-table' style='width: 100%'>
-                    <tr><td colspan="3">{{ Form::text('name', null, array('required', 'class' => 'w3-input', 'placeholder'=>'New Task Name')) }}</td></tr>
-                    <tr><td colspan="2">{{ Form::text('description', null, array('class' => 'w3-input', 'placeholder'=>'Keywords')) }}</td>
-                    <td class="" style="">
-                        <label style="" class="float-right">Remind Me!</label>
-                        {{ Form::checkbox('reminder', 1, true, array('class' => 'float-right', 'style'=>"margin-right:10px;")) }}</td>
+                    <tr>
+                        <th class="" style="vertical-align: middle;width:20%">Name</th>
+                        <td style="width:80%">{{ Form::text('name', null, array('id'=>'name', 'required', 'class' => 'w3-input', 'placeholder'=>'New Task Name')) }}
+                        </td></tr>
+                    <tr>
+                        <th class="" style="vertical-align: middle;width:20%">Keywords</th>
+                        <td style="width:80%">{{ Form::text('description', null, array('id'=>'description', 'class' => 'w3-input', 'placeholder'=>'Keywords')) }}</td>
+                    </tr>
+                </table>
+                <table class='w3-table' style='width: 100%'>
+                    <tr>
+                        <td>
+                        <div><label style="" class="float-right">Remind Me!</label>
+                        {{ Form::checkbox('reminder', 1, true, array('class' => 'float-right', 'style'=>"margin-right:10px;")) }}
+                        </div>
+                        </td>
+                        <td>
+                        <div id="completed_div">
+                        <label style="" class="float-right">Mark Completed</label>
+                        {{ Form::checkbox('completed', 1, false, array('id'=>'completed', 'class' => 'float-right', 'style'=>"margin-right:10px;")) }}
+                        </div>
+                        </td>
                     </tr>
                     <tr>
                     <td colspan="3" class="w3-small w3-center w3-border-dark-grey">

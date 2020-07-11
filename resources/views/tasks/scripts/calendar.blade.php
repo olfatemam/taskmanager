@@ -13,17 +13,29 @@ var calendar=null;
         }
 });
 
-
-function on_dateClick(date, jsEvent, view)
+function on_dateClick(date, event)
 {
-    console.log('date.date='+date.date);
-    cdate = moment(date.date, moment.tz.guess());
-    
+    console.log('date='+date);
+    cdate = moment(date, moment.tz.guess());
     document.getElementById("due").value = cdate.format('YYYY-MM-DD HH:mm:ss');
     document.getElementById("timezone").value = moment.tz.guess();
     $("#datetimezone").text ( cdate.format('ddd, D MMM h:m A ')+ " "+moment.tz.guess() );
-    console.log('sent due is: '+cdate.format('YYYY-MM-DD HH:mm:ss'));
-    console.log('sent timezone is: '+moment.tz.guess());
+    
+    if(event.event)
+    {
+        event = event.event;
+        $("#newtask-form-submit").val("Update Task");
+        $("#task_id").val(event.id);
+        $("#name").val(event.title);
+        $("#description").val(event.extendedProps.description);
+        $("#priority_id").prop('checked', event.extendedProps.priority_id);
+        $("#reminder").prop('checked', event.extendedProps.reminder);
+        $("#completed").prop('checked', event.extendedProps.completed);
+    }
+    else
+    {
+        $("#completed_div").hide();
+    }
     $('#mymodal').modal();
 }
 
@@ -46,33 +58,32 @@ $(function()
                     task.start=task.due;
                     task.end=task.due;
                     task.end.add(30, 'minutes');
-                    //task.color=task.priority.background_color;
                     task.priority=task.priority_name;
                     task.status=task.status_name;
-                    //task.user_name=task.user.name;
                     task.user=task.user_name;
-                    //task.allDay=true;
-                    
                     console.log(task);    
                     
-                    
+                    if(task.is_new==false)
+                    {
+                        event = g_calendar.getEventById(task.id);
+                        event.remove();
+                    }
                     var ret = g_calendar.addEvent(
-                        {
-                            id: task.id,
-                            title: task.title,
-                            start: task.due.format(),
-                            end:    task.end.format(),
-                            priority: task.priority,
-                            status: task.status,
-                            user_name: task.user_name,
-                            color: task.color,
-                            completed: task.completed,
-                            description: task.description,
-                            timezone: task.timezone,
-                            user_id: task.user_id
-                        }
-                        );
-                        g_calendar.render();
+                    {
+                                id: task.id,
+                                title: task.name,
+                                start: task.due.format(),
+                                end:    task.end.format(),
+                                priority: task.priority_name,
+                                status: task.status_name,
+                                user_name: task.user_name,
+                                color: task.color,
+                                completed: task.completed,
+                                description: task.description,
+                                timezone: task.timezone,
+                                user_id: task.user_id
+                    });
+                    g_calendar.render();
                 }
                 else if(response.error)
                 {
@@ -89,19 +100,26 @@ $(function()
 });
 
 
-        
-
-
-function on_event_click(event)
-{
-    task=event.event;
-    task_edit = "{{route('tasks.edit', -1)}}";
-    if (task.id) {
-        url = task_edit.replace("-1", task.id);
-        window.open(url);
-        return false;
-   }
-}
+//function on_event_click(event)
+//{
+//    task=event.event;
+//    
+//    cdate = moment(date.date, moment.tz.guess());
+//    document.getElementById("task_id").value = task.id;
+//    document.getElementById("due").value = cdate.format('YYYY-MM-DD HH:mm:ss');
+//    document.getElementById("timezone").value = moment.tz.guess();
+//    $("#datetimezone").text ( cdate.format('ddd, D MMM h:m A ')+ " "+moment.tz.guess() );
+//    console.log('sent due is: '+cdate.format('YYYY-MM-DD HH:mm:ss'));
+//    console.log('sent timezone is: '+moment.tz.guess());
+//    $('#mymodal').modal();
+//
+//        task_edit = "{{route('tasks.edit', -1)}}";
+//    if (task.id) {
+//        url = task_edit.replace("-1", task.id);
+//        window.open(url);
+//        return false;
+//   }
+//}
 
 function get_staus_title(event)
 {
@@ -185,13 +203,12 @@ document.addEventListener('DOMContentLoaded', function()
         
         dateClick: function(date, jsEvent, view)
         {
-            on_dateClick(date, jsEvent, view);
+            on_dateClick(date.date, null);
         },
 
         eventClick:function(event)
         {
-            on_event_click(event);
-
+            on_dateClick(event.event.start, event);
         },
         eventDidMount: function (info)
         {
