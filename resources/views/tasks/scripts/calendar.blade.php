@@ -13,17 +13,18 @@ var calendar=null;
         }
 });
 
-function on_dateClick(date, event)
+function on_dateClick(cdate, event)
 {
-    console.log('date='+date);
-    cdate = moment(date, moment.tz.guess());
+    console.log('input date='+cdate);
+    if(!event)
+    cdate = moment(cdate, moment.tz.guess());
+
     document.getElementById("due").value = cdate.format('YYYY-MM-DD HH:mm:ss');
     document.getElementById("timezone").value = moment.tz.guess();
     $("#datetimezone").text ( cdate.format('ddd, D MMM h:m A ')+ " "+moment.tz.guess() );
     
-    if(event.event)
+    if(event)
     {
-        event = event.event;
         $("#newtask-form-submit").val("Update Task");
         $("#task_id").val(event.id);
         $("#name").val(event.title);
@@ -72,8 +73,10 @@ $(function()
                     {
                                 id: task.id,
                                 title: task.name,
-                                start: task.due.format(),
-                                end:    task.end.format(),
+                                due: moment.utc(task.due),
+                                start: moment.utc(task.due).format(),
+                                end: moment.utc(task.due).format(),
+                                
                                 priority: task.priority_name,
                                 status: task.status_name,
                                 user_name: task.user_name,
@@ -99,27 +102,6 @@ $(function()
     });
 });
 
-
-//function on_event_click(event)
-//{
-//    task=event.event;
-//    
-//    cdate = moment(date.date, moment.tz.guess());
-//    document.getElementById("task_id").value = task.id;
-//    document.getElementById("due").value = cdate.format('YYYY-MM-DD HH:mm:ss');
-//    document.getElementById("timezone").value = moment.tz.guess();
-//    $("#datetimezone").text ( cdate.format('ddd, D MMM h:m A ')+ " "+moment.tz.guess() );
-//    console.log('sent due is: '+cdate.format('YYYY-MM-DD HH:mm:ss'));
-//    console.log('sent timezone is: '+moment.tz.guess());
-//    $('#mymodal').modal();
-//
-//        task_edit = "{{route('tasks.edit', -1)}}";
-//    if (task.id) {
-//        url = task_edit.replace("-1", task.id);
-//        window.open(url);
-//        return false;
-//   }
-//}
 
 function get_staus_title(event)
 {
@@ -183,8 +165,8 @@ document.addEventListener('DOMContentLoaded', function()
     jsn_tasks = {!! json_encode($tasks); !!};
 
     jsn_tasks.forEach(function (task) {
-        task.due = moment.utc(task.due).format();
-        task.start=task.due;
+        task.due = moment.utc(task.due);
+        task.start=task.due.format();
     });
     
     g_calendar = new FullCalendar.Calendar(calendarEl, 
@@ -208,7 +190,11 @@ document.addEventListener('DOMContentLoaded', function()
 
         eventClick:function(event)
         {
-            on_dateClick(event.event.start, event);
+            //task.due
+            
+            var edate = event.event.extendedProps.due.clone().tz(moment.tz.guess());//.format("DD-MM-YYYY h:mm:ss A"));
+            console.log(edate);
+            on_dateClick(edate, event.event);
         },
         eventDidMount: function (info)
         {
