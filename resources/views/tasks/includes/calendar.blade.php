@@ -40,36 +40,37 @@ foreach(\App\Priority::get() as $priority)
                 </table>
                 <table class='w3-table' style='width: 100%'>
                     <tr>
-                        <td>
-                        <div><label style="" class="float-right">Remind Me!</label>
-                        {{ Form::checkbox('reminder', 1, true, array('class' => 'float-right', 'style'=>"margin-right:10px;")) }}
-                        </div>
-                        </td>
-                        <td>
-                        <div id="completed_div">
-                        <label style="" class="float-right">Mark Completed</label>
-                        {{ Form::checkbox('completed', 1, false, array('id'=>'completed', 'class' => 'float-right', 'style'=>"margin-right:10px;")) }}
-                        </div>
-                        </td>
-                    </tr>
-                    <tr>
-                    <td colspan="3" class="w3-small w3-center w3-border-dark-grey">
-                        <table  class="w3-table w3-light-grey" style="width:100%">
-                        <tr>
+                    <td colspan="3" class="w3-small w3-center">
+                        <table  class="w3-table" style="width:100%">
+                        <tr class="w3-border">
                         <td style="float:right;"><label>Priority</label></td>    
                         @foreach(\App\Priority::get() as $priority)
                         <td><input type="radio" class="{{$priority->name}}" id="priority_id" name="priority_id" value="{{$priority->id}}" checked>
-                            <label class="{{$priority->name}}" for="priority_id">{{$priority->name}}</label>
+                            <label class="w3-tag w3-white" for="priority_id">{{$priority->name}}</label>
                         </td>
                         @endforeach
                         </tr>
+                        
                         </table>
                     </td>
                         
                     </tr>
-                </table>
-
+                    <tr>
+                    <td colspan="3" class="w3-small w3-center">
+                        <table  class="w3-table" style="width:100%">
+                        <tr class="w3-border">
+                        <td style="float:right;"><label></label></td>
+                        <td><div><label style="" class="float-right">Remind Me!</label>{{ Form::checkbox('reminder', 1, true, array('class' => 'float-right', 'style'=>"margin-right:10px;")) }}</div>
+                        </td>
+                        <td><div id="completed_div"><label style="" class="float-right">Mark Completed</label>{{ Form::checkbox('completed', 1, false, array('id'=>'completed', 'class' => 'float-right', 'style'=>"margin-right:10px;")) }}</div>
+                        </td>
+                        </tr>
+                    </table>
+                    </td>
+                </tr>
+            </table>
             </div>
+            
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <input id="newtask-form-submit" type="submit" class="btn btn-primary" value="Add Task">

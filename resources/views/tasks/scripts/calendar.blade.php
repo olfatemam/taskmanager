@@ -13,15 +13,21 @@ var calendar=null;
         }
 });
 
-function on_dateClick(cdate, event)
+function on_dateClick(start, event)
 {
-    console.log('input date='+cdate);
-    if(!event)
-    cdate = moment(cdate, moment.tz.guess());
-
-    document.getElementById("due").value = cdate.format('YYYY-MM-DD HH:mm:ss');
+    console.log('input date='+start +" " );
+    if(event)
+    {
+        //document.getElementById("due").value = moment.utc(event.extendedProps.due).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+        document.getElementById("due").value = moment(event.start).format('YYYY-MM-DD HH:mm:ss');
+    }
+    else
+    {
+        document.getElementById("due").value = moment(start).format('YYYY-MM-DD HH:mm:ss');
+    }
     document.getElementById("timezone").value = moment.tz.guess();
-    $("#datetimezone").text ( cdate.format('ddd, D MMM h:m A ')+ " "+moment.tz.guess() );
+    
+    $("#datetimezone").text ( document.getElementById("due").value + " " + moment.tz.guess());
     
     if(event)
     {
@@ -35,6 +41,13 @@ function on_dateClick(cdate, event)
     }
     else
     {
+        $("#task_id").val(-1);
+        $("#name").val("");
+        $("#description").val("");
+        $("#priority_id").prop('checked', false);
+        $("#reminder").prop('checked', true);
+        $("#completed").prop('checked', false);
+        
         $("#completed_div").hide();
     }
     $('#mymodal').modal();
@@ -55,10 +68,10 @@ $(function()
                 {
                     task = response.success;
                     task.title=task.name;
-                    task.due = moment.utc(task.due);
-                    task.start=task.due;
-                    task.end=task.due;
-                    task.end.add(30, 'minutes');
+                    
+                    utc = moment.utc(task.due);
+                    task.start=utc.local().format();
+
                     task.priority=task.priority_name;
                     task.status=task.status_name;
                     task.user=task.user_name;
@@ -73,9 +86,9 @@ $(function()
                     {
                                 id: task.id,
                                 title: task.name,
-                                due: moment.utc(task.due),
-                                start: moment.utc(task.due).format(),
-                                end: moment.utc(task.due).format(),
+                                due: task.due,
+                                start: task.start,
+                                end: task.end,
                                 
                                 priority: task.priority_name,
                                 status: task.status_name,
@@ -164,9 +177,14 @@ document.addEventListener('DOMContentLoaded', function()
     var calendarEl = document.getElementById('calendar');
     jsn_tasks = {!! json_encode($tasks); !!};
 
-    jsn_tasks.forEach(function (task) {
-        task.due = moment.utc(task.due);
-        task.start=task.due.format();
+    jsn_tasks.forEach(function (task)
+    {
+        utc = moment.utc(task.due);
+        task.start=utc.local().format();
+        
+        //        .tz(moment.tz.guess());
+        
+        console.log(task.start);
     });
     
     g_calendar = new FullCalendar.Calendar(calendarEl, 
@@ -183,18 +201,16 @@ document.addEventListener('DOMContentLoaded', function()
 
         "events": jsn_tasks,
         
-        dateClick: function(date, jsEvent, view)
+        dateClick: function(arg, jsEvent, view)
         {
-            on_dateClick(date.date, null);
+            cdate  = moment(arg.date);
+            on_dateClick(cdate, null);
         },
 
-        eventClick:function(event)
+        eventClick:function(arg)
         {
-            //task.due
-            
-            var edate = event.event.extendedProps.due.clone().tz(moment.tz.guess());//.format("DD-MM-YYYY h:mm:ss A"));
-            console.log(edate);
-            on_dateClick(edate, event.event);
+            console.log(arg.event.start);
+            on_dateClick(arg.event.start, arg.event);
         },
         eventDidMount: function (info)
         {
